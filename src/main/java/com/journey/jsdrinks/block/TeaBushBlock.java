@@ -141,7 +141,9 @@ public class TeaBushBlock extends StationaryBerryBushBlock implements ITallPlant
                 }
             }
 
-            BerryBushBlockEntity.resetPickedTick(level, lowerPos);
+            if (level.getBlockEntity(lowerPos) instanceof TeaBushBlockEntity bushBE) {
+                bushBE.resetLastPickedCounter();
+            }
             level.setBlockAndUpdate(lowerPos, lowerState.setValue(LIFECYCLE, Lifecycle.HEALTHY));
 
             BlockPos upperPos = lowerPos.above();

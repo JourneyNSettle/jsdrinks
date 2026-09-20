@@ -16,6 +16,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import net.dries007.tfc.common.TFCTags;
+import com.journey.jsdrinks.block.entity.JSDBerryBushBlockEntity;
 import net.dries007.tfc.common.blockentities.BerryBushBlockEntity;
 import net.dries007.tfc.common.blockentities.TickCounterBlockEntity;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
@@ -79,7 +80,7 @@ public class JSDCoffeeLeavesBlock extends FruitTreeLeavesBlock {
                     ItemHandlerHelper.giveItemToPlayer(player, drop);
                 }
             }
-            BerryBushBlockEntity.resetPickedTick(level, pos);
+            JSDBerryBushBlockEntity.resetPickedTick(level, pos);
             level.setBlockAndUpdate(pos, state.setValue(LIFECYCLE, Lifecycle.HEALTHY));
             return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
