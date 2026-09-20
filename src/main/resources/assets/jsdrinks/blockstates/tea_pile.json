@@ -1,7 +1,16 @@
 {
   "variants": {
-    "": {
-      "model": "jsdrinks:block/tea_pile"
+    "stage=0": {
+      "model": "jsdrinks:block/tea_pile_0"
+    },
+    "stage=1": {
+      "model": "jsdrinks:block/tea_pile_1"
+    },
+    "stage=2": {
+      "model": "jsdrinks:block/tea_pile_2"
+    },
+    "stage=3": {
+      "model": "jsdrinks:block/tea_pile_3"
     }
   }
 }

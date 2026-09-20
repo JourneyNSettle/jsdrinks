@@ -1,0 +1,72 @@
+{
+  "parent": "minecraft:block/thin_block",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "jsdrinks:block/tea_pile_bruised",
+    "pile": "jsdrinks:block/tea_pile_bruised"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        2,
+        15
+      ],
+      "faces": {
+        "down": {
+          "texture": "#pile",
+          "cullface": "down"
+        },
+        "up": {
+          "texture": "#pile"
+        },
+        "north": {
+          "texture": "#pile"
+        },
+        "south": {
+          "texture": "#pile"
+        },
+        "west": {
+          "texture": "#pile"
+        },
+        "east": {
+          "texture": "#pile"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        2,
+        3
+      ],
+      "to": [
+        13,
+        3,
+        13
+      ],
+      "faces": {
+        "up": {
+          "texture": "#pile"
+        },
+        "north": {
+          "texture": "#pile"
+        },
+        "south": {
+          "texture": "#pile"
+        },
+        "west": {
+          "texture": "#pile"
+        },
+        "east": {
+          "texture": "#pile"
+        }
+      }
+    }
+  ]
+}
