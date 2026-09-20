@@ -1,0 +1,17 @@
+{
+  "type": "firmalife:drying",
+  "ingredient": {
+    "item": "jsdrinks:moist_green_tea_leaf"
+  },
+  "result": {
+    "modifiers": [
+      {
+        "type": "jsdrinks:copy_components"
+      }
+    ],
+    "stack": {
+      "id": "jsdrinks:green_tea_leaf",
+      "count": 1
+    }
+  }
+}

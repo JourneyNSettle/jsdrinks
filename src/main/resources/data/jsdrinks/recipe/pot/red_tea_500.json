@@ -1,0 +1,18 @@
+{
+  "type": "tfc:pot",
+  "fluid_ingredient": {
+    "amount": 500,
+    "tag": "tfc:any_fresh_water"
+  },
+  "fluid_output": {
+    "amount": 500,
+    "id": "jsdrinks:red_tea"
+  },
+  "ingredients": [
+    {
+      "item": "jsdrinks:red_tea_leaf"
+    }
+  ],
+  "temperature": 300.0,
+  "duration": 1200
+}

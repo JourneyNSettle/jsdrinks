@@ -1,0 +1,15 @@
+{
+  "ingredient": {
+    "fluid": "jsdrinks:puerh_tea"
+  },
+  "water": 10.0,
+  "may_drink_when_full": true,
+  "effects": [
+    {
+      "effect": "minecraft:haste",
+      "duration": 4800,
+      "amplifier": 0,
+      "chance": 1.0
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "type": "tfc:heating",
+  "ingredient": {
+    "item": "jsdrinks:fresh_tea_leaf"
+  },
+  "temperature": 200.0,
+  "result_item": {
+    "modifiers": [
+      {
+        "type": "jsdrinks:copy_components"
+      }
+    ],
+    "stack": {
+      "id": "jsdrinks:moist_green_tea_leaf",
+      "count": 1
+    }
+  }
+}

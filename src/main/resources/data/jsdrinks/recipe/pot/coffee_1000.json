@@ -1,0 +1,21 @@
+{
+  "type": "tfc:pot",
+  "fluid_ingredient": {
+    "amount": 1000,
+    "tag": "tfc:any_fresh_water"
+  },
+  "fluid_output": {
+    "amount": 1000,
+    "id": "jsdrinks:coffee"
+  },
+  "ingredients": [
+    {
+      "item": "jsdrinks:ground_coffee"
+    },
+    {
+      "item": "jsdrinks:ground_coffee"
+    }
+  ],
+  "temperature": 300.0,
+  "duration": 2400
+}

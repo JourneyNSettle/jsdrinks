@@ -1,0 +1,14 @@
+{
+  "type": "firmalife:drying",
+  "ingredient": {
+    "type": "neoforge:data_component",
+    "items": "jsdrinks:green_tea_leaf",
+    "components": {
+      "jsdrinks:select": true
+    }
+  },
+  "result": {
+    "id": "jsdrinks:yellow_tea_leaf",
+    "count": 1
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "type": "firmalife:drying",
+  "ingredient": {
+    "item": "jsdrinks:fresh_tea_leaf"
+  },
+  "result": {
+    "id": "jsdrinks:white_tea_leaf",
+    "count": 1
+  }
+}

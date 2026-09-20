@@ -1,0 +1,15 @@
+{
+  "type": "tfc:barrel_instant_fluid",
+  "primary_fluid": {
+    "amount": 500,
+    "fluid": "jsdrinks:coffee"
+  },
+  "added_fluid": {
+    "amount": 100,
+    "tag": "firmalife:milks"
+  },
+  "output_fluid": {
+    "amount": 600,
+    "id": "jsdrinks:coffee_with_milk"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "type": "firmalife:drying",
+  "ingredient": {
+    "item": "jsdrinks:coffee_cherries"
+  },
+  "result": {
+    "id": "jsdrinks:dried_coffee_cherries",
+    "count": 1
+  }
+}

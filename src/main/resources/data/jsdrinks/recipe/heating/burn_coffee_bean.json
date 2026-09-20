@@ -1,0 +1,18 @@
+{
+  "type": "tfc:heating",
+  "ingredient": {
+    "item": "jsdrinks:roasted_coffee_bean"
+  },
+  "temperature": 400.0,
+  "result_item": {
+    "modifiers": [
+      {
+        "type": "jsdrinks:add_burnt"
+      }
+    ],
+    "stack": {
+      "id": "jsdrinks:roasted_coffee_bean",
+      "count": 1
+    }
+  }
+}

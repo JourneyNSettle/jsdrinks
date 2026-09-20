@@ -1,28 +1,28 @@
 package com.journey.jsdrinks;
 
-import com.journey.jsdrinks.registry.JSDBlockEntities;
-import com.journey.jsdrinks.registry.JSDBlocks;
-import com.journey.jsdrinks.registry.JSDCreativeTabs;
-import com.journey.jsdrinks.registry.JSDDataComponents;
-import com.journey.jsdrinks.registry.JSDItems;
-import com.mojang.logging.LogUtils;
+import com.journey.jsdrinks.recipe.JSDItemStackModifiers;
+import com.journey.jsdrinks.registry.*;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Mod(JourneyDrinks.MODID)
 public class JourneyDrinks {
     public static final String MODID = "jsdrinks";
-    public static final Logger LOGGER = LogUtils.getLogger();
+    public static final String MOD_ID = MODID;
+    public static final Logger LOGGER = LoggerFactory.getLogger(JourneyDrinks.class);
 
     public JourneyDrinks(IEventBus modEventBus) {
-        LOGGER.info("Initializing Journey Drinks (TFC + Firmalife Addon)");
+        LOGGER.info("Initializing Journey Drinks addon for TFC & Firmalife");
 
-        // Register registries
         JSDDataComponents.DATA_COMPONENTS.register(modEventBus);
         JSDBlocks.BLOCKS.register(modEventBus);
-        JSDBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         JSDItems.ITEMS.register(modEventBus);
+        JSDBlockEntities.BLOCK_ENTITIES.register(modEventBus);
+        JSDFluids.FLUIDS.register(modEventBus);
+        JSDFluids.FLUID_TYPES.register(modEventBus);
+        JSDItemStackModifiers.MODIFIERS.register(modEventBus);
         JSDCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
     }
 }

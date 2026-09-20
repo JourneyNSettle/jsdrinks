@@ -34,5 +34,15 @@
   "block.jsdrinks.plant.coffee_growing_branch": "Growing Coffee Branch",
   "block.jsdrinks.plant.coffee_sapling": "Coffee Sapling",
   "block.jsdrinks.plant.potted.coffee_sapling": "Potted Coffee Sapling",
-  "block.jsdrinks.tea_pile": "Tea Leaf Pile"
+  "block.jsdrinks.tea_pile": "Tea Leaf Pile",
+  "fluid.jsdrinks.coffee": "Coffee",
+  "fluid.jsdrinks.strong_coffee": "Strong Coffee",
+  "fluid.jsdrinks.coffee_with_milk": "Coffee with Milk",
+  "fluid.jsdrinks.strong_coffee_with_milk": "Strong Coffee with Milk",
+  "fluid.jsdrinks.white_tea": "White Tea",
+  "fluid.jsdrinks.green_tea": "Green Tea",
+  "fluid.jsdrinks.yellow_tea": "Yellow Tea",
+  "fluid.jsdrinks.red_tea": "Red Tea",
+  "fluid.jsdrinks.puerh_tea": "Pu-erh Tea",
+  "fluid.jsdrinks.strong_puerh_tea": "Strong Pu-erh Tea"
 }

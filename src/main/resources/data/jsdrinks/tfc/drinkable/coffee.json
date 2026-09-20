@@ -1,0 +1,15 @@
+{
+  "ingredient": {
+    "fluid": "jsdrinks:coffee"
+  },
+  "water": 10.0,
+  "may_drink_when_full": true,
+  "effects": [
+    {
+      "effect": "minecraft:haste",
+      "duration": 3600,
+      "amplifier": 0,
+      "chance": 1.0
+    }
+  ]
+}

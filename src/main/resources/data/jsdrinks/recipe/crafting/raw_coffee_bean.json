@@ -1,0 +1,25 @@
+{
+  "type": "tfc:advanced_shapeless_crafting",
+  "ingredients": [
+    {
+      "tag": "c:tools/knives"
+    },
+    {
+      "item": "jsdrinks:dried_coffee_cherries"
+    }
+  ],
+  "primary_ingredient": {
+    "tag": "c:tools/knives"
+  },
+  "remainder": {
+    "modifiers": [
+      {
+        "type": "tfc:damage_crafting_remainder"
+      }
+    ]
+  },
+  "result": {
+    "id": "jsdrinks:raw_coffee_bean",
+    "count": 1
+  }
+}

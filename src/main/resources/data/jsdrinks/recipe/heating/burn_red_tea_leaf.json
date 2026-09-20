@@ -1,0 +1,18 @@
+{
+  "type": "tfc:heating",
+  "ingredient": {
+    "item": "jsdrinks:red_tea_leaf"
+  },
+  "temperature": 400.0,
+  "result_item": {
+    "modifiers": [
+      {
+        "type": "jsdrinks:add_burnt"
+      }
+    ],
+    "stack": {
+      "id": "jsdrinks:red_tea_leaf",
+      "count": 1
+    }
+  }
+}

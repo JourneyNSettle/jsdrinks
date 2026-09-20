@@ -1,0 +1,14 @@
+{
+  "values": [
+    "jsdrinks:coffee",
+    "jsdrinks:strong_coffee",
+    "jsdrinks:coffee_with_milk",
+    "jsdrinks:strong_coffee_with_milk",
+    "jsdrinks:white_tea",
+    "jsdrinks:green_tea",
+    "jsdrinks:yellow_tea",
+    "jsdrinks:red_tea",
+    "jsdrinks:puerh_tea",
+    "jsdrinks:strong_puerh_tea"
+  ]
+}

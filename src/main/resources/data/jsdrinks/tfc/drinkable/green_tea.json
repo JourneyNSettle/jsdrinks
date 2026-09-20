@@ -1,0 +1,15 @@
+{
+  "ingredient": {
+    "fluid": "jsdrinks:green_tea"
+  },
+  "water": 10.0,
+  "may_drink_when_full": true,
+  "effects": [
+    {
+      "effect": "minecraft:speed",
+      "duration": 3600,
+      "amplifier": 0,
+      "chance": 1.0
+    }
+  ]
+}

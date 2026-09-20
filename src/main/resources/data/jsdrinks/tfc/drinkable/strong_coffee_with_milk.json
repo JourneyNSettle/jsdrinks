@@ -1,0 +1,16 @@
+{
+  "ingredient": {
+    "fluid": "jsdrinks:strong_coffee_with_milk"
+  },
+  "water": 10.0,
+  "may_drink_when_full": true,
+  "dairy": 1.0,
+  "effects": [
+    {
+      "effect": "minecraft:haste",
+      "duration": 4800,
+      "amplifier": 1,
+      "chance": 1.0
+    }
+  ]
+}

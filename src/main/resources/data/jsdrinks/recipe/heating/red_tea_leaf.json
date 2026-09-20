@@ -1,0 +1,13 @@
+{
+  "type": "tfc:heating",
+  "ingredient": {
+    "item": "jsdrinks:fermented_tea_leaf"
+  },
+  "temperature": 200.0,
+  "result_item": {
+    "stack": {
+      "id": "jsdrinks:red_tea_leaf",
+      "count": 1
+    }
+  }
+}

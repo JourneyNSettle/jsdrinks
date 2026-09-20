@@ -1,0 +1,8 @@
+{
+  "ingredient": {
+    "item": "jsdrinks:coffee_cherries"
+  },
+  "hunger": 1,
+  "fruit": 1.0,
+  "decay_modifier": 1.0
+}

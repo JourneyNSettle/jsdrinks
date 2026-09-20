@@ -34,5 +34,15 @@
   "block.jsdrinks.plant.coffee_growing_branch": "Растущая ветка кофейного дерева",
   "block.jsdrinks.plant.coffee_sapling": "Саженец кофе",
   "block.jsdrinks.plant.potted.coffee_sapling": "Кофейный саженец в горшке",
-  "block.jsdrinks.tea_pile": "Куча чайных листьев"
+  "block.jsdrinks.tea_pile": "Куча чайных листьев",
+  "fluid.jsdrinks.coffee": "Кофе",
+  "fluid.jsdrinks.strong_coffee": "Крепкий кофе",
+  "fluid.jsdrinks.coffee_with_milk": "Кофе с молоком",
+  "fluid.jsdrinks.strong_coffee_with_milk": "Крепкий кофе с молоком",
+  "fluid.jsdrinks.white_tea": "Белый чай",
+  "fluid.jsdrinks.green_tea": "Зелёный чай",
+  "fluid.jsdrinks.yellow_tea": "Жёлтый чай",
+  "fluid.jsdrinks.red_tea": "Красный чай",
+  "fluid.jsdrinks.puerh_tea": "Чай пуэр",
+  "fluid.jsdrinks.strong_puerh_tea": "Крепкий пуэр"
 }

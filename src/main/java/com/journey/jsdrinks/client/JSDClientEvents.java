@@ -1,41 +1,90 @@
 package com.journey.jsdrinks.client;
 
-import com.journey.jsdrinks.JourneyDrinks;
 import com.journey.jsdrinks.registry.JSDDataComponents;
+import com.journey.jsdrinks.registry.JSDFluids;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
-@EventBusSubscriber(modid = JourneyDrinks.MODID, value = Dist.CLIENT)
+import net.dries007.tfc.client.extensions.FluidRendererExtension;
+import net.dries007.tfc.common.fluids.FluidHolder;
+import net.dries007.tfc.common.fluids.TFCFluids;
+
+import static com.journey.jsdrinks.JourneyDrinks.MOD_ID;
+
+@EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
 public class JSDClientEvents {
 
+    private static final ResourceLocation WATER_STILL = ResourceLocation.withDefaultNamespace("block/water_still");
+    private static final ResourceLocation WATER_FLOW = ResourceLocation.withDefaultNamespace("block/water_flow");
+    private static final ResourceLocation WATER_OVERLAY = ResourceLocation.withDefaultNamespace("block/water_overlay");
+    private static final ResourceLocation UNDERWATER = ResourceLocation.withDefaultNamespace("textures/misc/underwater.png");
+
     @SubscribeEvent
-    public static void onItemTooltip(ItemTooltipEvent event) {
-        ItemStack stack = event.getItemStack();
+    public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
+        // Coffee fluids
+        registerFluid(event, JSDFluids.COFFEE, 0xFF3D2314);
+        registerFluid(event, JSDFluids.STRONG_COFFEE, 0xFF24150B);
+        registerFluid(event, JSDFluids.COFFEE_WITH_MILK, 0xFF8A674A);
+        registerFluid(event, JSDFluids.STRONG_COFFEE_WITH_MILK, 0xFF6A4D34);
 
-        // Select tag
-        if (Boolean.TRUE.equals(stack.get(JSDDataComponents.SELECT.get()))) {
-            event.getToolTip().add(Component.translatable("tooltip.jsdrinks.select").withStyle(ChatFormatting.GREEN));
-        }
+        // Tea fluids
+        registerFluid(event, JSDFluids.WHITE_TEA, 0xFFEBDCB9);
+        registerFluid(event, JSDFluids.GREEN_TEA, 0xFF6E8B3D);
+        registerFluid(event, JSDFluids.YELLOW_TEA, 0xFFD4AF37);
+        registerFluid(event, JSDFluids.RED_TEA, 0xFF8A3324);
+        registerFluid(event, JSDFluids.PUERH_TEA, 0xFF4A1A12);
+        registerFluid(event, JSDFluids.STRONG_PUERH_TEA, 0xFF2D0F0A);
+    }
 
-        // Large leaf tag
-        if (Boolean.TRUE.equals(stack.get(JSDDataComponents.LARGE_LEAF.get()))) {
-            event.getToolTip().add(Component.translatable("tooltip.jsdrinks.large_leaf").withStyle(ChatFormatting.AQUA));
-        }
+    private static void registerFluid(RegisterClientExtensionsEvent event, FluidHolder<?> holder, int color) {
+        event.registerFluidType(
+            new FluidRendererExtension(
+                TFCFluids.ALPHA_MASK | color,
+                WATER_STILL,
+                WATER_FLOW,
+                WATER_OVERLAY,
+                UNDERWATER
+            ),
+            holder.getType()
+        );
+    }
 
-        // Burnt tag
-        if (Boolean.TRUE.equals(stack.get(JSDDataComponents.BURNT.get()))) {
-            event.getToolTip().add(Component.translatable("tooltip.jsdrinks.burnt").withStyle(ChatFormatting.RED));
-        }
-
-        // Quality rating
-        Integer quality = stack.get(JSDDataComponents.QUALITY.get());
-        if (quality != null && quality > 0) {
-            event.getToolTip().add(Component.translatable("tooltip.jsdrinks.quality", quality).withStyle(ChatFormatting.GOLD));
+    @EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
+    public static class GameEvents {
+        @SubscribeEvent
+        public static void onItemTooltip(ItemTooltipEvent event) {
+            ItemStack stack = event.getItemStack();
+            if (stack.has(JSDDataComponents.SELECT.get())) {
+                Boolean val = stack.get(JSDDataComponents.SELECT.get());
+                if (val != null && val) {
+                    event.getToolTip().add(Component.translatable("tooltip.jsdrinks.select").withStyle(ChatFormatting.GOLD));
+                }
+            }
+            if (stack.has(JSDDataComponents.LARGE_LEAF.get())) {
+                Boolean val = stack.get(JSDDataComponents.LARGE_LEAF.get());
+                if (val != null && val) {
+                    event.getToolTip().add(Component.translatable("tooltip.jsdrinks.large_leaf").withStyle(ChatFormatting.DARK_GREEN));
+                }
+            }
+            if (stack.has(JSDDataComponents.BURNT.get())) {
+                Boolean val = stack.get(JSDDataComponents.BURNT.get());
+                if (val != null && val) {
+                    event.getToolTip().add(Component.translatable("tooltip.jsdrinks.burnt").withStyle(ChatFormatting.RED));
+                }
+            }
+            if (stack.has(JSDDataComponents.QUALITY.get())) {
+                Integer quality = stack.get(JSDDataComponents.QUALITY.get());
+                if (quality != null) {
+                    event.getToolTip().add(Component.translatable("tooltip.jsdrinks.quality", quality).withStyle(ChatFormatting.YELLOW));
+                }
+            }
         }
     }
 }
