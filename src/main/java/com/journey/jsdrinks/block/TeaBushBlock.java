@@ -127,7 +127,7 @@ public class TeaBushBlock extends SeasonalPlantBlock {
             level.setBlock(otherPos, Blocks.AIR.defaultBlockState(), 35);
         }
         if (!level.isClientSide() && !player.isCreative() && part == ITallPlant.Part.LOWER) {
-            popResource(level, pos, new ItemStack(JSDItems.TEA_BUSH_SAPLING.get()));
+            popResource(level, pos, new ItemStack(JSDItems.TEA_SAPLING.get()));
         }
         return super.playerWillDestroy(level, pos, state, player);
     }

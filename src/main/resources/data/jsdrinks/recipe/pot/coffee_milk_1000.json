@@ -1,0 +1,22 @@
+{
+  "type": "tfc:pot",
+  "fluid_ingredient": {
+    "amount": 1000,
+    "fluid": "jsdrinks:coffee"
+  },
+  "fluid_output": {
+    "amount": 1200,
+    "id": "jsdrinks:coffee_with_milk"
+  },
+  "ingredients": [
+    {
+      "type": "tfc:fluid_content",
+      "fluid": {
+        "amount": 200,
+        "tag": "firmalife:milks"
+      }
+    }
+  ],
+  "temperature": 150.0,
+  "duration": 400
+}

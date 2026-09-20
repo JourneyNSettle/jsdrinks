@@ -1,0 +1,25 @@
+{
+  "name": "Coffee Production",
+  "category": "tfc:jsdrinks",
+  "icon": "jsdrinks:ground_coffee",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(thing)Coffee$() is made from the cherries of the $(thing)Coffee Tree$(), which grows in hot, tropical climates. Wild coffee trees must be at least 2 years old before they bear fruit. Trees grown in a $(l:firmalife/planters)Bonsai Planter$() inside a $(l:firmalife/greenhouse)Greenhouse$() fruit immediately."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(thing)Production Chain$():$(br)$(li)Dry coffee cherries on a $(l:firmalife/drying)Drying Mat$()$(li)Craft dried cherries with a $(thing)Knife$() to extract raw beans$(li)Dry raw beans on a drying mat$(li)Heat dried beans carefully to roast them — listen for the crackle!$(li)Grind roasted beans with a $(thing)Manual Mill$()"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(bold)Roasting Tips$(): The beans go through two stages of heating. The first stage (around 200°C) roasts them properly. If heated further (past 400°C), they burn! A careful touch is needed.$(br2)The $(thing)Manual Mill$() is crafted from a stick, a raw stone, and lumber."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(thing)Brewing$(): Place ground coffee in a $(thing)Pot$() with fresh water and heat.$(br)$(li)1 ground coffee + 500 mB water = Coffee$(li)2 ground coffee + 500 mB water = Strong Coffee$(br2)$(thing)Coffee with Milk$(): Mix coffee with milk (100 mB per 500 mB coffee) in a $(thing)Barrel$() or $(thing)Pot$()."
+    }
+  ],
+  "read_by_default": true,
+  "sortnum": 2
+}

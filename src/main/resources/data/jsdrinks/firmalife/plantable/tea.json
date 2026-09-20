@@ -5,7 +5,7 @@
   },
   "extra_seed_chance": 0.08,
   "ingredient": {
-    "item": "jsdrinks:plant/tea_sapling"
+    "item": "jsdrinks:tea_sapling"
   },
   "nutrient": {
     "nitrogen": 0.35,
@@ -15,7 +15,7 @@
   "planter": "bonsai",
   "seed": {
     "count": 1,
-    "id": "jsdrinks:plant/tea_sapling"
+    "id": "jsdrinks:tea_sapling"
   },
   "specials": [],
   "textures": [

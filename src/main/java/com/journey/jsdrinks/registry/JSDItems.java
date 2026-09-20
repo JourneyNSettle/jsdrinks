@@ -37,11 +37,10 @@ public class JSDItems {
 
     // Saplings
     public static final DeferredHolder<Item, Item> TEA_SAPLING = register("tea_sapling",
-        () -> new JSDSaplingItem(JSDBlocks.TEA_SAPLING.get(), JSDClimateRanges.TEA_TREE, JSDBlocks.TEA_STAGES));
-    public static final DeferredHolder<Item, Item> TEA_BUSH_SAPLING = register("tea_bush_sapling",
         () -> new JSDSaplingItem(JSDBlocks.TEA_BUSH.get(), JSDClimateRanges.TEA_BUSH, JSDBlocks.TEA_STAGES));
     public static final DeferredHolder<Item, Item> COFFEE_SAPLING = register("coffee_sapling",
         () -> new JSDSaplingItem(JSDBlocks.COFFEE_SAPLING.get(), JSDClimateRanges.COFFEE_TREE, JSDBlocks.COFFEE_STAGES));
+
 
     public static DeferredHolder<Item, Item> register(String name) {
         return ITEMS.register(name, () -> new Item(new Item.Properties()));

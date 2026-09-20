@@ -1,0 +1,29 @@
+{
+  "name": "Tea Production",
+  "category": "tfc:jsdrinks",
+  "icon": "jsdrinks:fresh_tea_leaf",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(thing)Tea$() is produced from the leaves of the $(thing)Tea Bush$(), which grows wild in warm, humid climates. Tea bushes can be found in the world as two-block-tall plants. Right-clicking a fruiting bush or tree with a $(thing)Knife$() yields more $(thing)Fresh Tea Leaves$(), while picking by hand gives fewer."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(thing)White Tea$(): Dry fresh leaves on a $(l:firmalife/drying)Drying Mat$().$(br2)$(thing)Green Tea$(): Heat fresh leaves in a firepit or oven, then dry the moist result.$(br2)$(thing)Yellow Tea$(): Only $(thing)Select Leaves$() (picked by hand from a bush) can become yellow tea — dry the green tea leaf again."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(thing)Red Tea$(): Stomp fresh leaves in a $(l:firmalife/wine)Stomping Barrel$() to bruise them. Place the bruised leaves on the ground in a pile. After 1 TFC day, they ferment. Heat the fermented leaves in a firepit or oven.$(br2)Be careful — overheating will burn the leaves!"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(thing)Pu-erh Tea$(): Place fermented tea leaves in a pile on the ground. After 2 TFC months, they age into Pu-erh. Only $(thing)Large Leaves$() (picked by hand from a tree) have a good chance of success — regular leaves will rot. Placing the pile on bare ground gives a chance of $(thing)Strong Pu-erh$(), but also increases spoilage risk. Rain pauses the aging timer."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "All teas are brewed in a $(thing)Pot$() with fresh water. Use 1 leaf per 500 mB, or 2 leaves per 1000 mB. Tea must be heated to at least 300°C."
+    }
+  ],
+  "read_by_default": true,
+  "sortnum": 1
+}

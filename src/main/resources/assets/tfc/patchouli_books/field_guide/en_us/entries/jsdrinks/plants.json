@@ -1,0 +1,21 @@
+{
+  "name": "Tea & Coffee Plants",
+  "category": "tfc:jsdrinks",
+  "icon": "jsdrinks:tea_sapling",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "$(thing)Tea Saplings$() can be planted in the ground to grow a $(thing)Tea Bush$() — a two-block-tall seasonal plant. The bush goes through lifecycle stages (dormant, healthy, flowering, fruiting) based on climate and season. Right-click a fruiting bush to harvest fresh tea leaves."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "If a tea bush is left unharvested for 2 years, it transforms irreversibly into a $(thing)Tea Tree$() — a full fruit tree with branches and leaves. Trees yield more leaves but cannot be reverted to bushes.$(br2)Tea saplings can also be placed in a $(l:firmalife/planters)Bonsai Planter$() in a greenhouse, where they grow as a tree directly."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(thing)Coffee Trees$() grow exclusively as fruit trees. Wild coffee trees in the world must grow for 2 years before first fruiting. In a bonsai planter, they fruit immediately.$(br2)Coffee cherries can be eaten as a small fruit snack, but their real value is in processing them into coffee."
+    }
+  ],
+  "read_by_default": true,
+  "sortnum": 0
+}

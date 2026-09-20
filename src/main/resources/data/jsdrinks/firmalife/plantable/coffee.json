@@ -1,11 +1,11 @@
 {
   "crop": {
     "count": 1,
-    "id": "jsdrinks:coffee_cherry"
+    "id": "jsdrinks:coffee_cherries"
   },
   "extra_seed_chance": 0.08,
   "ingredient": {
-    "item": "jsdrinks:plant/coffee_sapling"
+    "item": "jsdrinks:coffee_sapling"
   },
   "nutrient": {
     "nitrogen": 0.3,
@@ -15,7 +15,7 @@
   "planter": "bonsai",
   "seed": {
     "count": 1,
-    "id": "jsdrinks:plant/coffee_sapling"
+    "id": "jsdrinks:coffee_sapling"
   },
   "specials": [],
   "textures": [
