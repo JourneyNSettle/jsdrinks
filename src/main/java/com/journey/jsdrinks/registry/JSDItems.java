@@ -1,6 +1,7 @@
 package com.journey.jsdrinks.registry;
 
 import com.journey.jsdrinks.JourneyDrinks;
+import com.journey.jsdrinks.item.JSDSaplingItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -32,9 +33,12 @@ public class JSDItems {
     public static final DeferredHolder<Item, Item> PUERH_TEA = register("puerh_tea");
     public static final DeferredHolder<Item, Item> STRONG_PUERH_TEA = register("strong_puerh_tea");
 
-    // --- Saplings & Plants ---
-    public static final DeferredHolder<Item, Item> TEA_SAPLING = register("tea_sapling");
-    public static final DeferredHolder<Item, Item> COFFEE_SAPLING = register("coffee_sapling");
+    // --- Saplings & Plants (uses JSDSaplingItem with TFC PlantableInfo climate overlay) ---
+    public static final DeferredHolder<Item, Item> TEA_SAPLING = register("plant/tea_sapling", () ->
+            new JSDSaplingItem(JSDBlocks.TEA_SAPLING.get(), JSDClimateRanges.TEA_TREE, JSDBlocks.TEA_STAGES));
+
+    public static final DeferredHolder<Item, Item> COFFEE_SAPLING = register("plant/coffee_sapling", () ->
+            new JSDSaplingItem(JSDBlocks.COFFEE_SAPLING.get(), JSDClimateRanges.COFFEE_TREE, JSDBlocks.COFFEE_STAGES));
 
     // --- Tools ---
     public static final DeferredHolder<Item, Item> MANUAL_MILL = register("manual_mill", () -> new Item(new Item.Properties().stacksTo(1)));

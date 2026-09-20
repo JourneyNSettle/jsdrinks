@@ -22,5 +22,16 @@
   "item.jsdrinks.strong_puerh_tea": "Крепкий пуэр",
   "item.jsdrinks.tea_sapling": "Саженец чая",
   "item.jsdrinks.coffee_sapling": "Саженец кофе",
-  "item.jsdrinks.manual_mill": "Ручная мельница"
+  "item.jsdrinks.manual_mill": "Ручная мельница",
+  "block.jsdrinks.plant.tea_bush": "Чайный куст",
+  "block.jsdrinks.plant.tea_leaves": "Листва чайного дерева",
+  "block.jsdrinks.plant.tea_branch": "Ветка чайного дерева",
+  "block.jsdrinks.plant.tea_growing_branch": "Растущая ветка чайного дерева",
+  "block.jsdrinks.plant.tea_sapling": "Саженец чая",
+  "block.jsdrinks.plant.potted.tea_sapling": "Чайный саженец в горшке",
+  "block.jsdrinks.plant.coffee_leaves": "Листва кофейного дерева",
+  "block.jsdrinks.plant.coffee_branch": "Ветка кофейного дерева",
+  "block.jsdrinks.plant.coffee_growing_branch": "Растущая ветка кофейного дерева",
+  "block.jsdrinks.plant.coffee_sapling": "Саженец кофе",
+  "block.jsdrinks.plant.potted.coffee_sapling": "Кофейный саженец в горшке"
 }

@@ -1,5 +1,7 @@
 package com.journey.jsdrinks;
 
+import com.journey.jsdrinks.registry.JSDBlockEntities;
+import com.journey.jsdrinks.registry.JSDBlocks;
 import com.journey.jsdrinks.registry.JSDCreativeTabs;
 import com.journey.jsdrinks.registry.JSDDataComponents;
 import com.journey.jsdrinks.registry.JSDItems;
@@ -18,6 +20,8 @@ public class JourneyDrinks {
 
         // Register registries
         JSDDataComponents.DATA_COMPONENTS.register(modEventBus);
+        JSDBlocks.BLOCKS.register(modEventBus);
+        JSDBlockEntities.BLOCK_ENTITIES.register(modEventBus);
         JSDItems.ITEMS.register(modEventBus);
         JSDCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
     }

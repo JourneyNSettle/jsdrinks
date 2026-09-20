@@ -1,0 +1,28 @@
+{
+  "crop": {
+    "count": 1,
+    "id": "jsdrinks:coffee_cherry"
+  },
+  "extra_seed_chance": 0.08,
+  "ingredient": {
+    "item": "jsdrinks:plant/coffee_sapling"
+  },
+  "nutrient": {
+    "nitrogen": 0.3,
+    "phosphorous": 0.25,
+    "potassium": 0.45
+  },
+  "planter": "bonsai",
+  "seed": {
+    "count": 1,
+    "id": "jsdrinks:plant/coffee_sapling"
+  },
+  "specials": [],
+  "textures": [
+    "tfc:block/wood/leaves/cherry_fruiting",
+    "tfc:block/wood/leaves/cherry_flowering",
+    "tfc:block/wood/leaves/cherry",
+    "tfc:block/wood/leaves/cherry"
+  ],
+  "tier": 15
+}

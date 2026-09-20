@@ -1,0 +1,28 @@
+{
+  "crop": {
+    "count": 1,
+    "id": "jsdrinks:fresh_tea_leaf"
+  },
+  "extra_seed_chance": 0.08,
+  "ingredient": {
+    "item": "jsdrinks:plant/tea_sapling"
+  },
+  "nutrient": {
+    "nitrogen": 0.35,
+    "phosphorous": 0.2,
+    "potassium": 0.4
+  },
+  "planter": "bonsai",
+  "seed": {
+    "count": 1,
+    "id": "jsdrinks:plant/tea_sapling"
+  },
+  "specials": [],
+  "textures": [
+    "tfc:block/wood/leaves/green_apple_fruiting",
+    "tfc:block/wood/leaves/green_apple_flowering",
+    "tfc:block/wood/leaves/green_apple",
+    "tfc:block/wood/leaves/green_apple"
+  ],
+  "tier": 15
+}

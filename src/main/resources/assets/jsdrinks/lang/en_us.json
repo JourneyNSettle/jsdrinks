@@ -22,5 +22,16 @@
   "item.jsdrinks.strong_puerh_tea": "Strong Pu-erh Tea",
   "item.jsdrinks.tea_sapling": "Tea Sapling",
   "item.jsdrinks.coffee_sapling": "Coffee Sapling",
-  "item.jsdrinks.manual_mill": "Manual Mill"
+  "item.jsdrinks.manual_mill": "Manual Mill",
+  "block.jsdrinks.plant.tea_bush": "Tea Bush",
+  "block.jsdrinks.plant.tea_leaves": "Tea Leaves",
+  "block.jsdrinks.plant.tea_branch": "Tea Branch",
+  "block.jsdrinks.plant.tea_growing_branch": "Growing Tea Branch",
+  "block.jsdrinks.plant.tea_sapling": "Tea Sapling",
+  "block.jsdrinks.plant.potted.tea_sapling": "Potted Tea Sapling",
+  "block.jsdrinks.plant.coffee_leaves": "Coffee Leaves",
+  "block.jsdrinks.plant.coffee_branch": "Coffee Branch",
+  "block.jsdrinks.plant.coffee_growing_branch": "Growing Coffee Branch",
+  "block.jsdrinks.plant.coffee_sapling": "Coffee Sapling",
+  "block.jsdrinks.plant.potted.coffee_sapling": "Potted Coffee Sapling"
 }
