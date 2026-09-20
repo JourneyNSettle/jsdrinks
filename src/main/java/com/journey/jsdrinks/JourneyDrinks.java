@@ -1,9 +1,11 @@
 package com.journey.jsdrinks;
 
+import com.journey.jsdrinks.client.JSDClientEvents;
 import com.journey.jsdrinks.recipe.JSDItemStackModifiers;
 import com.journey.jsdrinks.registry.*;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.loading.FMLEnvironment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,5 +27,9 @@ public class JourneyDrinks {
         JSDItemStackModifiers.MODIFIERS.register(modEventBus);
         JSDCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         JSDFeatures.FEATURES.register(modEventBus);
+
+        if (FMLEnvironment.dist.isClient()) {
+            JSDClientEvents.init(modEventBus);
+        }
     }
 }

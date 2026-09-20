@@ -1,0 +1,7 @@
+{
+  "parent": "tfc:block/plant/cross_2",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "cross": "jsdrinks:block/fruit_tree/tea_sapling"
+  }
+}

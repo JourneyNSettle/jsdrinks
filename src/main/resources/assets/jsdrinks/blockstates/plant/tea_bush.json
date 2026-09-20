@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
-      "model": "jsdrinks:block/tea_bush"
+    "part=lower": {
+      "model": "jsdrinks:block/plant/tea_bush_lower"
+    },
+    "part=upper": {
+      "model": "jsdrinks:block/plant/tea_bush_upper"
     }
   }
 }

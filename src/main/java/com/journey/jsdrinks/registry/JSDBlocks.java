@@ -42,7 +42,7 @@ public class JSDBlocks {
 
     // --- Tea Bush ---
     public static final DeferredHolder<Block, TeaBushBlock> TEA_BUSH = BLOCKS.register("plant/tea_bush", () ->
-            new TeaBushBlock(ExtendedProperties.of(MapColor.PLANT).strength(0.6f).noOcclusion().randomTicks().sound(SoundType.SWEET_BERRY_BUSH).flammableLikeLeaves(),
+            new TeaBushBlock(ExtendedProperties.of(MapColor.PLANT).strength(0.6f).noOcclusion().randomTicks().sound(SoundType.SWEET_BERRY_BUSH).blockEntity(JSDBlockEntities.TEA_BUSH).flammableLikeLeaves(),
                     TEA_STAGES, JSDClimateRanges.TEA_BUSH));
 
     // --- Tea Tree ---

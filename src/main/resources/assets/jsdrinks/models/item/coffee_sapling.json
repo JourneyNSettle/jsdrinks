@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:item/generated",
+  "parent": "item/generated",
   "textures": {
-    "layer0": "jsdrinks:item/coffee_sapling"
+    "layer0": "jsdrinks:block/fruit_tree/coffee_sapling"
   }
 }
