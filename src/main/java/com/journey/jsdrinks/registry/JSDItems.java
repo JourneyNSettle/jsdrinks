@@ -27,8 +27,8 @@ public class JSDItems {
     public static final DeferredHolder<Item, Item> MOIST_GREEN_TEA_LEAF = register("moist_green_tea_leaf");
     public static final DeferredHolder<Item, Item> DRIED_GREEN_TEA = register("dried_green_tea");
     public static final DeferredHolder<Item, Item> DRIED_YELLOW_TEA = register("dried_yellow_tea");
-    public static final DeferredHolder<Item, Item> BRUISED_TEA_LEAF = register("bruised_tea_leaf");
-    public static final DeferredHolder<Item, Item> FERMENTED_TEA_LEAF = register("fermented_tea_leaf");
+    public static final DeferredHolder<Item, Item> BRUISED_TEA_LEAF = register("bruised_tea_leaf", () -> new com.journey.jsdrinks.item.TeaLeafPlaceableItem(new Item.Properties()));
+    public static final DeferredHolder<Item, Item> FERMENTED_TEA_LEAF = register("fermented_tea_leaf", () -> new com.journey.jsdrinks.item.TeaLeafPlaceableItem(new Item.Properties()));
     public static final DeferredHolder<Item, Item> DRIED_RED_TEA = register("dried_red_tea");
     public static final DeferredHolder<Item, Item> PUERH_TEA = register("puerh_tea");
     public static final DeferredHolder<Item, Item> STRONG_PUERH_TEA = register("strong_puerh_tea");

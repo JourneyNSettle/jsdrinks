@@ -4,6 +4,7 @@ import com.journey.jsdrinks.JourneyDrinks;
 import com.journey.jsdrinks.block.JSDCoffeeLeavesBlock;
 import com.journey.jsdrinks.block.JSDTeaLeavesBlock;
 import com.journey.jsdrinks.block.TeaBushBlock;
+import com.journey.jsdrinks.block.TeaPileBlock;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -81,4 +82,8 @@ public class JSDBlocks {
 
     public static final DeferredHolder<Block, FlowerPotBlock> POTTED_COFFEE_SAPLING = BLOCKS.register("plant/potted/coffee_sapling", () ->
             new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, COFFEE_SAPLING, BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_ACACIA_SAPLING)));
+
+    // --- Tea Piles ---
+    public static final DeferredHolder<Block, TeaPileBlock> TEA_PILE = BLOCKS.register("tea_pile", () ->
+            new TeaPileBlock(BlockBehaviour.Properties.of().sound(SoundType.GRASS).strength(0.2f).noOcclusion()));
 }

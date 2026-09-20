@@ -33,5 +33,6 @@
   "block.jsdrinks.plant.coffee_branch": "Ветка кофейного дерева",
   "block.jsdrinks.plant.coffee_growing_branch": "Растущая ветка кофейного дерева",
   "block.jsdrinks.plant.coffee_sapling": "Саженец кофе",
-  "block.jsdrinks.plant.potted.coffee_sapling": "Кофейный саженец в горшке"
+  "block.jsdrinks.plant.potted.coffee_sapling": "Кофейный саженец в горшке",
+  "block.jsdrinks.tea_pile": "Куча чайных листьев"
 }

@@ -33,5 +33,6 @@
   "block.jsdrinks.plant.coffee_branch": "Coffee Branch",
   "block.jsdrinks.plant.coffee_growing_branch": "Growing Coffee Branch",
   "block.jsdrinks.plant.coffee_sapling": "Coffee Sapling",
-  "block.jsdrinks.plant.potted.coffee_sapling": "Potted Coffee Sapling"
+  "block.jsdrinks.plant.potted.coffee_sapling": "Potted Coffee Sapling",
+  "block.jsdrinks.tea_pile": "Tea Leaf Pile"
 }
