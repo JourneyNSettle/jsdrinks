@@ -28,6 +28,11 @@ import java.util.function.Supplier;
 
 public class JSDCoffeeLeavesBlock extends FruitTreeLeavesBlock {
 
+    @Override
+    public Lifecycle getLifecycleForCurrentMonth(Level level, BlockPos pos) {
+        return super.getLifecycleForCurrentMonth(level, pos);
+    }
+
     public JSDCoffeeLeavesBlock(ExtendedProperties properties, Lifecycle[] stages, Supplier<ClimateRange> climateRange, int flowerColor) {
         super(properties, JSDItems.COFFEE_CHERRY, stages, climateRange, flowerColor);
     }
@@ -38,9 +43,9 @@ public class JSDCoffeeLeavesBlock extends FruitTreeLeavesBlock {
 
         if (level.getBlockEntity(pos) instanceof BerryBushBlockEntity plant) {
             BlockPos stemPos = plant.getStemPos();
-            long totalAgeTicks = 0;
+            long totalAgeTicks = plant.getTicksSinceUpdate();
             if (level.getBlockEntity(stemPos) instanceof TickCounterBlockEntity stemEntity) {
-                totalAgeTicks = stemEntity.getTicksSinceUpdate();
+                totalAgeTicks = Math.max(totalAgeTicks, stemEntity.getTicksSinceUpdate());
             }
 
             // In world: 2 years without fruiting (from TZ 3.2)

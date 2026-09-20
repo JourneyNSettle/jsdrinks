@@ -26,6 +26,11 @@ import java.util.function.Supplier;
 
 public class JSDTeaLeavesBlock extends FruitTreeLeavesBlock {
 
+    @Override
+    public Lifecycle getLifecycleForCurrentMonth(Level level, BlockPos pos) {
+        return super.getLifecycleForCurrentMonth(level, pos);
+    }
+
     public JSDTeaLeavesBlock(ExtendedProperties properties, Lifecycle[] stages, Supplier<ClimateRange> climateRange, int flowerColor) {
         super(properties, JSDItems.FRESH_TEA_LEAF, stages, climateRange, flowerColor);
     }

@@ -24,5 +24,6 @@ public class JourneyDrinks {
         JSDFluids.FLUID_TYPES.register(modEventBus);
         JSDItemStackModifiers.MODIFIERS.register(modEventBus);
         JSDCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
+        JSDFeatures.FEATURES.register(modEventBus);
     }
 }

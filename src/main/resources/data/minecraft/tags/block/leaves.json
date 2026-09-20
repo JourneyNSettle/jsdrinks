@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "jsdrinks:plant/tea_leaves",
+    "jsdrinks:plant/coffee_leaves"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "jsdrinks:plant/tea_branch",
+    "jsdrinks:plant/tea_growing_branch",
+    "jsdrinks:plant/coffee_branch",
+    "jsdrinks:plant/coffee_growing_branch"
+  ]
+}

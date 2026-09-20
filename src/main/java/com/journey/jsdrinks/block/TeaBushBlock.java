@@ -47,6 +47,11 @@ public class TeaBushBlock extends StationaryBerryBushBlock implements ITallPlant
 
     public static final EnumProperty<Part> PART = TFCBlockStateProperties.TALL_PLANT_PART;
 
+    @Override
+    public Lifecycle getLifecycleForCurrentMonth(Level level, BlockPos pos) {
+        return super.getLifecycleForCurrentMonth(level, pos);
+    }
+
     public TeaBushBlock(ExtendedProperties properties, Lifecycle[] lifecycle, Supplier<ClimateRange> climateRange) {
         super(properties, JSDItems.FRESH_TEA_LEAF, lifecycle, climateRange);
         registerDefaultState(getStateDefinition().any().setValue(PART, Part.LOWER).setValue(LIFECYCLE, Lifecycle.HEALTHY));

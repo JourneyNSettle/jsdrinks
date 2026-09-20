@@ -18,7 +18,7 @@ import net.dries007.tfc.common.fluids.TFCFluids;
 
 import static com.journey.jsdrinks.JourneyDrinks.MOD_ID;
 
-@EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = MOD_ID, value = Dist.CLIENT)
 public class JSDClientEvents {
 
     private static final ResourceLocation WATER_STILL = ResourceLocation.withDefaultNamespace("block/water_still");

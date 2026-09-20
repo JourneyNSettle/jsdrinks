@@ -1,0 +1,6 @@
+{
+  "type": "tfc:fruit_trees",
+  "config": {
+    "state": "jsdrinks:plant/tea_growing_branch"
+  }
+}
