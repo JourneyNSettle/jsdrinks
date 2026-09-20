@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "jsdrinks:item/coffee_sapling"
+  }
+}

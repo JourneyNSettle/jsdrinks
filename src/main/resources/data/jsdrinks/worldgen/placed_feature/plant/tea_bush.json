@@ -1,0 +1,11 @@
+{
+  "feature": "jsdrinks:plant/tea_bush",
+  "placement": [
+    {
+      "type": "block_predicate_filter",
+      "predicate": {
+        "type": "tfc:replaceable"
+      }
+    }
+  ]
+}

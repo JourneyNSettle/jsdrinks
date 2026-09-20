@@ -1,0 +1,41 @@
+{
+  "parent": "minecraft:block/thin_block",
+  "textures": {
+    "particle": "jsdrinks:block/tea_pile"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        4,
+        14
+      ],
+      "faces": {
+        "down": {
+          "texture": "#particle",
+          "cullface": "down"
+        },
+        "up": {
+          "texture": "#particle"
+        },
+        "north": {
+          "texture": "#particle"
+        },
+        "south": {
+          "texture": "#particle"
+        },
+        "west": {
+          "texture": "#particle"
+        },
+        "east": {
+          "texture": "#particle"
+        }
+      }
+    }
+  ]
+}

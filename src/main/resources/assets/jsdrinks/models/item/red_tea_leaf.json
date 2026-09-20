@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "jsdrinks:item/red_tea_leaf"
+  }
+}
