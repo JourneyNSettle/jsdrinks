@@ -1,0 +1,6 @@
+{
+  "parent": "tfc:block/plant/branch_up",
+  "textures": {
+    "bark": "jsdrinks:block/fruit_tree/tea_branch"
+  }
+}

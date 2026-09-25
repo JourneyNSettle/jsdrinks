@@ -1,7 +1,16 @@
 {
   "variants": {
-    "": {
-      "model": "jsdrinks:block/tea_leaves"
+    "lifecycle=dormant": {
+      "model": "jsdrinks:block/plant/tea_dry_leaves"
+    },
+    "lifecycle=healthy": {
+      "model": "jsdrinks:block/plant/tea_leaves"
+    },
+    "lifecycle=flowering": {
+      "model": "jsdrinks:block/plant/tea_flowering_leaves"
+    },
+    "lifecycle=fruiting": {
+      "model": "jsdrinks:block/plant/tea_fruiting_leaves"
     }
   }
 }

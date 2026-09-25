@@ -22,14 +22,15 @@ import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 /**
- * Worldgen feature for rare large ancient tea trees (Camellia sinensis var. assamica).
+ * Worldgen feature for normal-sized wild tea trees (Camellia sinensis).
  * <p>
- * Generates an ancient tea tree with spreading boughs, natural multipart fruitwood branches,
- * and leaves strictly attached directly to branch blocks (distance 1) so edge decay never occurs.
+ * TZ R23 row 2: Wild tea tree of standard size.
+ * Generated with connected multipart fruitwood branches and leaves strictly adjacent
+ * to branch blocks (distance 1) so that leaf decay on chunk load never occurs.
  */
-public class LargeTeaTreeFeature extends Feature<NoneFeatureConfiguration> {
+public class WildTeaTreeFeature extends Feature<NoneFeatureConfiguration> {
 
-    public LargeTeaTreeFeature(Codec<NoneFeatureConfiguration> codec) {
+    public WildTeaTreeFeature(Codec<NoneFeatureConfiguration> codec) {
         super(codec);
     }
 
@@ -43,9 +44,9 @@ public class LargeTeaTreeFeature extends Feature<NoneFeatureConfiguration> {
             return false;
         }
 
-        int trunkHeight = 3 + rand.nextInt(2); // 3-4 blocks trunk
+        int trunkHeight = 2 + rand.nextInt(2); // 2-3 blocks trunk
 
-        for (int y = 0; y < trunkHeight + 3; y++) {
+        for (int y = 0; y < trunkHeight + 2; y++) {
             if (!EnvironmentHelpers.isWorldgenReplaceable(level, pos.above(y))) {
                 return false;
             }
@@ -66,43 +67,23 @@ public class LargeTeaTreeFeature extends Feature<NoneFeatureConfiguration> {
             branchPositions.add(pos.above(y));
         }
 
-        // 2. Crown vertical extension
-        BlockPos crown1 = pos.above(trunkHeight);
-        if (EnvironmentHelpers.isWorldgenReplaceable(level, crown1)) {
-            branchPositions.add(crown1);
-            BlockPos crown2 = crown1.above();
-            if (EnvironmentHelpers.isWorldgenReplaceable(level, crown2)) {
-                branchPositions.add(crown2);
-            }
+        // 2. Crown branch
+        BlockPos crownPos = pos.above(trunkHeight);
+        if (EnvironmentHelpers.isWorldgenReplaceable(level, crownPos)) {
+            branchPositions.add(crownPos);
         }
 
-        // 3. Spreading boughs from upper trunk
+        // 3. Spreading boughs
         BlockPos topTrunkPos = pos.above(trunkHeight - 1);
         for (Direction dir : Direction.Plane.HORIZONTAL) {
-            int branchLen = 2 + rand.nextInt(2); // 2-3 blocks outward
+            int branchLen = 1 + rand.nextInt(2); // 1-2 blocks outward
             BlockPos cur = topTrunkPos;
             for (int step = 1; step <= branchLen; step++) {
                 cur = cur.relative(dir);
-                if (step == 2 && rand.nextBoolean()) {
-                    cur = cur.above();
-                }
                 if (EnvironmentHelpers.isWorldgenReplaceable(level, cur)) {
                     branchPositions.add(cur);
                 } else {
                     break;
-                }
-            }
-        }
-
-        // 4. Secondary lower boughs (if trunk is tall enough)
-        if (trunkHeight >= 4) {
-            BlockPos midTrunkPos = pos.above(trunkHeight - 2);
-            for (Direction dir : Direction.Plane.HORIZONTAL) {
-                if (rand.nextBoolean()) {
-                    BlockPos cur = midTrunkPos.relative(dir);
-                    if (EnvironmentHelpers.isWorldgenReplaceable(level, cur)) {
-                        branchPositions.add(cur);
-                    }
                 }
             }
         }

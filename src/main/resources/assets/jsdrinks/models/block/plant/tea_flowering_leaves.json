@@ -1,0 +1,6 @@
+{
+  "parent": "block/leaves",
+  "textures": {
+    "all": "jsdrinks:block/fruit_tree/tea_flowering_leaves"
+  }
+}

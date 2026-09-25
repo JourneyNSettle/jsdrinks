@@ -1,5 +1,8 @@
 package com.journey.jsdrinks.worldgen.feature;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.journey.jsdrinks.block.JSDCoffeeLeavesBlock;
 import com.journey.jsdrinks.block.entity.JSDBerryBushBlockEntity;
 import com.journey.jsdrinks.registry.JSDBlocks;
@@ -19,6 +22,16 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
+/**
+ * Worldgen feature for wild coffee trees.
+ * <p>
+ * Ensures all non-persistent leaves are placed directly adjacent to a branch block
+ * (distance 1) so that TFC leaf validation succeeds and leaves never break on chunk load.
+ * Branches use TFC's multipart connection logic (getStateForPlacement) to ensure
+ * slender, organic 3D branch connections rather than full 16x16 blocks.
+ * <p>
+ * TZ R23: Wild coffee trees spawn with age >= 3 years so ripe coffee cherries are available.
+ */
 public class WildCoffeeTreeFeature extends Feature<NoneFeatureConfiguration> {
 
     public WildCoffeeTreeFeature(Codec<NoneFeatureConfiguration> codec) {
@@ -35,7 +48,7 @@ public class WildCoffeeTreeFeature extends Feature<NoneFeatureConfiguration> {
             return false;
         }
 
-        int trunkHeight = 2 + rand.nextInt(2); // 2-3 блока ствола
+        int trunkHeight = 2 + rand.nextInt(2); // 2-3 blocks trunk
         for (int y = 0; y < trunkHeight + 2; y++) {
             if (!EnvironmentHelpers.isWorldgenReplaceable(level, pos.above(y))) {
                 return false;
@@ -50,50 +63,71 @@ public class WildCoffeeTreeFeature extends Feature<NoneFeatureConfiguration> {
         }
 
         BlockPos stemPos = pos;
-        // ТЗ R23: дикое кофейное дерево имеет возраст >= 3 лет → плоды доступны сразу
-        // resetCounter() сначала устанавливает lastUpdateTick = Calendars.SERVER.getTicks(),
-        // затем increaseCounter() делает lastUpdateTick -= threeYearsTicks,
-        // итого счётчик показывает «прошло 3 года» — без риска переполнения/нуля.
         long threeYearsTicks = 3L * Calendars.get(level.getLevel()).getCalendarTicksInYear();
 
-        // Размещение ствола
+        Set<BlockPos> branchPositions = new HashSet<>();
+
+        // 1. Trunk
         for (int y = 0; y < trunkHeight; y++) {
-            setBlock(level, pos.above(y), branchBlock.defaultBlockState());
+            branchPositions.add(pos.above(y));
         }
 
-        // Горизонтальные ветви
-        BlockPos topPos = pos.above(trunkHeight - 1);
+        // 2. Crown central branch above trunk
+        BlockPos crownPos = pos.above(trunkHeight);
+        if (EnvironmentHelpers.isWorldgenReplaceable(level, crownPos)) {
+            branchPositions.add(crownPos);
+        }
+
+        // 3. Horizontal spreading branches
+        BlockPos topTrunkPos = pos.above(trunkHeight - 1);
         for (Direction dir : Direction.Plane.HORIZONTAL) {
-            int branchLen = 1 + rand.nextInt(2);
-            BlockPos cur = topPos;
+            int branchLen = 1 + rand.nextInt(2); // 1-2 blocks outward
+            BlockPos cur = topTrunkPos;
             for (int step = 1; step <= branchLen; step++) {
                 cur = cur.relative(dir);
                 if (EnvironmentHelpers.isWorldgenReplaceable(level, cur)) {
-                    setBlock(level, cur, branchBlock.defaultBlockState());
-                    placeLeavesAround(level, cur, leavesBlock, lifecycle, stemPos, threeYearsTicks);
+                    branchPositions.add(cur);
+                } else {
+                    break;
                 }
             }
         }
 
-        // Верхняя крона
-        placeLeavesAround(level, pos.above(trunkHeight), leavesBlock, lifecycle, stemPos, threeYearsTicks);
+        // Pass 1: Place all branch blocks
+        for (BlockPos bPos : branchPositions) {
+            setBlock(level, bPos, branchBlock.defaultBlockState());
+        }
+
+        // Pass 2: Update all branch blockstates using getStateForPlacement
+        // so directional connections (UP, DOWN, NORTH, SOUTH, EAST, WEST) match adjacent branches
+        for (BlockPos bPos : branchPositions) {
+            setBlock(level, bPos, branchBlock.getStateForPlacement(level, bPos));
+        }
+
+        // Pass 3: Place leaves ONLY directly around existing branch blocks.
+        // Every leaf is strictly adjacent (distance 1) to a branch, so isValid() is always true.
+        BlockState leafState = leavesBlock.defaultBlockState().setValue(JSDCoffeeLeavesBlock.LIFECYCLE, lifecycle);
+
+        for (BlockPos bPos : branchPositions) {
+            for (Direction d : Direction.values()) {
+                if (d == Direction.DOWN) {
+                    // Only hang leaves below branch if high enough above ground
+                    if (bPos.getY() - pos.getY() < 2) {
+                        continue;
+                    }
+                }
+                BlockPos leafPos = bPos.relative(d);
+                if (!branchPositions.contains(leafPos) && EnvironmentHelpers.isWorldgenReplaceable(level, leafPos)) {
+                    setBlock(level, leafPos, leafState);
+                    if (level.getBlockEntity(leafPos) instanceof JSDBerryBushBlockEntity be) {
+                        be.setStemPos(stemPos);
+                        be.resetCounter();
+                        be.increaseCounter(threeYearsTicks);
+                    }
+                }
+            }
+        }
 
         return true;
-    }
-
-    private void placeLeavesAround(WorldGenLevel level, BlockPos center, JSDCoffeeLeavesBlock leavesBlock, Lifecycle lifecycle, BlockPos stemPos, long ageTicks) {
-        BlockState leafState = leavesBlock.defaultBlockState().setValue(JSDCoffeeLeavesBlock.LIFECYCLE, lifecycle);
-        for (Direction d : Direction.values()) {
-            BlockPos p = center.relative(d);
-            if (EnvironmentHelpers.isWorldgenReplaceable(level, p)) {
-                setBlock(level, p, leafState);
-                // Используем аддонный JSDBerryBushBlockEntity — TFC BerryBushBlockEntity здесь не совпадает по типу BE
-                if (level.getBlockEntity(p) instanceof JSDBerryBushBlockEntity be) {
-                    be.setStemPos(stemPos);
-                    be.resetCounter();         // ОБЯЗАТЕЛЬНО сначала reset — устанавливает lastUpdateTick в текущий момент
-                    be.increaseCounter(ageTicks); // затем сдвигаем на 3 года назад
-                }
-            }
-        }
     }
 }

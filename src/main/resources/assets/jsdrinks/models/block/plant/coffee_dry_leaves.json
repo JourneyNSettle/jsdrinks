@@ -1,0 +1,6 @@
+{
+  "parent": "block/leaves",
+  "textures": {
+    "all": "jsdrinks:block/fruit_tree/coffee_dry_leaves"
+  }
+}

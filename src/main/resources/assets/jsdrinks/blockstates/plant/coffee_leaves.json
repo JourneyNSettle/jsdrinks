@@ -1,7 +1,16 @@
 {
   "variants": {
-    "": {
-      "model": "jsdrinks:block/coffee_leaves"
+    "lifecycle=dormant": {
+      "model": "jsdrinks:block/plant/coffee_dry_leaves"
+    },
+    "lifecycle=healthy": {
+      "model": "jsdrinks:block/plant/coffee_leaves"
+    },
+    "lifecycle=flowering": {
+      "model": "jsdrinks:block/plant/coffee_flowering_leaves"
+    },
+    "lifecycle=fruiting": {
+      "model": "jsdrinks:block/plant/coffee_fruiting_leaves"
     }
   }
 }
