@@ -4,6 +4,7 @@ import com.journey.jsdrinks.JSDConfig;
 import com.journey.jsdrinks.block.TeaBushBlock;
 import com.journey.jsdrinks.registry.JSDBlockEntities;
 import com.journey.jsdrinks.registry.JSDBlocks;
+import com.journey.jsdrinks.registry.JSDClimateRanges;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -16,10 +17,13 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import net.dries007.tfc.common.blockentities.BerryBushBlockEntity;
 import net.dries007.tfc.common.blocks.plant.fruit.Lifecycle;
+import net.dries007.tfc.common.blocks.plant.fruit.SeasonalPlantBlock;
 import net.dries007.tfc.util.calendar.Calendars;
+import net.dries007.tfc.util.climate.Climate;
+import net.dries007.tfc.util.climate.ClimateRange;
 
 /**
- * Block entity for the LOWER half of a 2-block tall tea bush.
+ * Block entity for the 2-block tall tea bush (carried on both halves for HoeOverlay info).
  * Tracks harvest history and handles the irreversible bush → tree transformation
  * after {@link JSDConfig#TEA_BUSH_TRANSFORM_YEARS} calendar years without harvest.
  */
@@ -43,39 +47,44 @@ public class TeaBushBlockEntity extends BerryBushBlockEntity {
     }
 
     /**
-     * Called every {@code randomTick} for the LOWER part of the bush.
-     * <p>
-     * Increments a per-calendar-year counter <b>only</b> when the bush is in an active
-     * lifecycle AND the climate is valid.  When the counter reaches the configurable
-     * threshold the bush is irreversibly replaced with a tea tree trunk + initial leaves.
-     *
-     * @param level            server level
-     * @param pos              position of the LOWER bush block
-     * @param currentLifecycle current {@link Lifecycle} of the bush blockstate
-     * @param climateValid     {@code true} when temperature + hydration are inside the
-     *                         bush's {@link net.dries007.tfc.util.climate.ClimateRange}
+     * Periodic server ticker for the LOWER half.
+     * Evaluates calendar years every 100 ticks (5 seconds) so commands like /time add
+     * trigger transformation without waiting for random ticks.
+     */
+    public void serverTick(Level level, BlockPos pos, BlockState state) {
+        if (level.getGameTime() % 100 == 0) {
+            Lifecycle lifecycle = state.hasProperty(TeaBushBlock.LIFECYCLE) ? state.getValue(TeaBushBlock.LIFECYCLE) : Lifecycle.HEALTHY;
+            final ClimateRange range = JSDClimateRanges.TEA_BUSH.get();
+            final int hydration = TeaBushBlock.getHydration(level, pos.below());
+            final float temp = Climate.getAverageTemperature(level, pos);
+            boolean climateValid = range != null && range.checkBoth(hydration, temp, false);
+            checkYearlyGrowth(level, pos, lifecycle, climateValid);
+        }
+    }
+
+    /**
+     * Checks calendar year advancement and handles bush → tree transformation.
      */
     public void checkYearlyGrowth(Level level, BlockPos pos, Lifecycle currentLifecycle, boolean climateValid) {
         if (level.isClientSide()) return;
 
-        // TZ §3.1 — Dormant / no fruit season / bad climate → year does not count.
-        // Keep lastRecordedYear in sync so the very next valid year doesn't double-fire.
-        if (currentLifecycle == Lifecycle.DORMANT || !climateValid) {
-            lastRecordedYear = (int) Calendars.get(level).getCalendarYear();
-            return;
-        }
-
         long currentYear = Calendars.get(level).getCalendarYear();
 
-        // First ever tick — just record the year, don't increment.
+        // First ever tick — record the year and return.
         if (lastRecordedYear == -1) {
             lastRecordedYear = (int) currentYear;
+            setChanged();
             return;
         }
 
         if (currentYear > lastRecordedYear) {
+            int yearsPassed = (int) (currentYear - lastRecordedYear);
             lastRecordedYear = (int) currentYear;
-            seasonsWithoutHarvest++;
+
+            // TZ §3.1 — Dormant or bad climate → year does not count towards growth.
+            if (currentLifecycle != Lifecycle.DORMANT && climateValid) {
+                seasonsWithoutHarvest += yearsPassed;
+            }
             setChanged();
 
             int threshold = JSDConfig.TEA_BUSH_TRANSFORM_YEARS.get();
@@ -93,11 +102,9 @@ public class TeaBushBlockEntity extends BerryBushBlockEntity {
         BlockPos upperPos = pos.above();
         BlockState upperState = level.getBlockState(upperPos);
 
-        // 1. Remove the UPPER part explicitly BEFORE touching LOWER.
-        //    This avoids a neighbor-update race: changing LOWER would trigger
-        //    updateShape on UPPER, which sees LOWER is no longer a TeaBushBlock
-        //    and returns AIR — but the timing is implementation-dependent.
+        // 1. Remove the UPPER part and its block entity explicitly BEFORE touching LOWER.
         if (upperState.getBlock() instanceof TeaBushBlock) {
+            level.removeBlockEntity(upperPos);
             level.setBlock(upperPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
         }
 

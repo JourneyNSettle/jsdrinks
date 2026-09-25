@@ -1,7 +1,59 @@
 {
-  "parent": "minecraft:block/cross",
   "render_type": "minecraft:cutout_mipped",
   "textures": {
-    "cross": "jsdrinks:block/tea_bush_lower"
-  }
+    "0": "jsdrinks:block/tea_bush_lower",
+    "particle": "jsdrinks:block/tea_bush_lower"
+  },
+  "elements": [
+    {
+      "from": [13, 0, 0],
+      "to": [13, 16, 16],
+      "faces": {
+        "east": {"uv": [0, 0, 16, 16], "texture": "#0"},
+        "west": {"uv": [0, 0, 16, 16], "texture": "#0"}
+      }
+    },
+    {
+      "from": [0, 0, 3],
+      "to": [16, 16, 3],
+      "faces": {
+        "north": {"uv": [0, 0, 16, 16], "texture": "#0"},
+        "south": {"uv": [0, 0, 16, 16], "texture": "#0"}
+      }
+    },
+    {
+      "from": [0, 0, 13],
+      "to": [16, 16, 13],
+      "faces": {
+        "north": {"uv": [0, 0, 16, 16], "texture": "#0"},
+        "south": {"uv": [0, 0, 16, 16], "texture": "#0"}
+      }
+    },
+    {
+      "from": [6, 0, 5],
+      "to": [22, 16, 5],
+      "rotation": {"angle": 45, "axis": "y", "origin": [14, 8, 13]},
+      "faces": {
+        "north": {"uv": [0, 0, 16, 16], "texture": "#0"},
+        "south": {"uv": [0, 0, 16, 16], "texture": "#0"}
+      }
+    },
+    {
+      "from": [-5, 0, 5],
+      "to": [11, 16, 5],
+      "rotation": {"angle": -45, "axis": "y", "origin": [3, 8, 13]},
+      "faces": {
+        "north": {"uv": [0, 0, 16, 16], "texture": "#0"},
+        "south": {"uv": [0, 0, 16, 16], "texture": "#0"}
+      }
+    },
+    {
+      "from": [3, 0, 0],
+      "to": [3, 16, 16],
+      "faces": {
+        "east": {"uv": [0, 0, 16, 16], "texture": "#0"},
+        "west": {"uv": [0, 0, 16, 16], "texture": "#0"}
+      }
+    }
+  ]
 }

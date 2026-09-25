@@ -56,5 +56,6 @@
   "fluid.jsdrinks.yellow_tea": "Yellow Tea",
   "fluid.jsdrinks.red_tea": "Red Tea",
   "fluid.jsdrinks.puerh_tea": "Pu-erh Tea",
-  "fluid.jsdrinks.strong_puerh_tea": "Strong Pu-erh Tea"
+  "fluid.jsdrinks.strong_puerh_tea": "Strong Pu-erh Tea",
+  "jsdrinks.tooltip.tea_bush.years_without_harvest": "Years without harvest: %s / %s (until tree)"
 }

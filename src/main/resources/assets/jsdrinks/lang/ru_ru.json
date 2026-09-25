@@ -55,5 +55,6 @@
   "fluid.jsdrinks.yellow_tea": "Жёлтый чай",
   "fluid.jsdrinks.red_tea": "Красный чай",
   "fluid.jsdrinks.puerh_tea": "Пуэр",
-  "fluid.jsdrinks.strong_puerh_tea": "Крепкий пуэр"
+  "fluid.jsdrinks.strong_puerh_tea": "Крепкий пуэр",
+  "jsdrinks.tooltip.tea_bush.years_without_harvest": "Лет без сбора: %s / %s (до чайного дерева)"
 }

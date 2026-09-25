@@ -1,12 +1,15 @@
 package com.journey.jsdrinks.block;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import com.journey.jsdrinks.JSDConfig;
 import com.journey.jsdrinks.block.entity.TeaBushBlockEntity;
 import com.journey.jsdrinks.registry.JSDDataComponents;
 import com.journey.jsdrinks.registry.JSDItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -42,6 +45,8 @@ import net.dries007.tfc.common.blocks.TFCBlockStateProperties;
 import net.dries007.tfc.common.blocks.plant.ITallPlant;
 import net.dries007.tfc.common.blocks.plant.fruit.Lifecycle;
 import net.dries007.tfc.common.blocks.plant.fruit.SeasonalPlantBlock;
+import net.dries007.tfc.common.blocks.soil.FarmlandBlock;
+import net.dries007.tfc.common.blocks.soil.HoeOverlayBlock;
 import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.util.climate.Climate;
 import net.dries007.tfc.util.climate.ClimateRange;
@@ -49,18 +54,18 @@ import net.dries007.tfc.util.climate.ClimateRange;
 /**
  * A 2-block-tall seasonal tea bush (LOWER + UPPER).
  * <ul>
- *   <li>Only the LOWER part has a {@link TeaBushBlockEntity}.</li>
+ *   <li>Implements {@link HoeOverlayBlock} for rich Jade/WAILA agriculture telemetry.</li>
  *   <li>Harvest with an empty hand gives 1–2 leaves with a chance of the {@code select} tag.</li>
  *   <li>Harvest with a knife gives 2–3 leaves (no tags) and costs 1 durability.</li>
  *   <li>After {@code JSDConfig.TEA_BUSH_TRANSFORM_YEARS} calendar years without harvest
  *       the bush irreversibly transforms into a tea tree.</li>
  * </ul>
  */
-public class TeaBushBlock extends SeasonalPlantBlock {
+public class TeaBushBlock extends SeasonalPlantBlock implements HoeOverlayBlock {
 
     public static final EnumProperty<ITallPlant.Part> PART = TFCBlockStateProperties.TALL_PLANT_PART;
     public static final VoxelShape LOWER_SHAPE = box(2.0, 0.0, 2.0, 14.0, 16.0, 14.0);
-    public static final VoxelShape UPPER_SHAPE = box(2.0, 0.0, 2.0, 14.0, 12.0, 14.0);
+    public static final VoxelShape UPPER_SHAPE = box(2.0, 0.0, 2.0, 14.0, 16.0, 14.0);
 
     public TeaBushBlock(ExtendedProperties properties, Lifecycle[] lifecycle, Supplier<ClimateRange> climateRange) {
         super(properties, climateRange, JSDItems.FRESH_TEA_LEAF, lifecycle);
@@ -87,15 +92,45 @@ public class TeaBushBlock extends SeasonalPlantBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        // Only the LOWER half carries the block entity.
-        return state.getValue(PART) == ITallPlant.Part.LOWER ? new TeaBushBlockEntity(pos, state) : null;
+        // Both halves carry a BlockEntity so HoeOverlay/Jade functions on both upper and lower blocks
+        return new TeaBushBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> givenType) {
-        // No continuous ticker required — all logic runs through randomTick.
-        return null;
+        // Only the LOWER half ticks on the server to prevent double-processing
+        if (level.isClientSide() || state.getValue(PART) != ITallPlant.Part.LOWER) {
+            return null;
+        }
+        return (lvl, pos, st, be) -> {
+            if (be instanceof TeaBushBlockEntity bush) {
+                bush.serverTick(lvl, pos, st);
+            }
+        };
+    }
+
+    @Override
+    public void addHoeOverlayInfo(Level level, BlockPos pos, BlockState state, Consumer<Component> text, boolean isDebug) {
+        BlockPos lowerPos = state.getValue(PART) == ITallPlant.Part.UPPER ? pos.below() : pos;
+        BlockPos rootPos = lowerPos.below();
+        final ClimateRange range = climateRange.get();
+        final int hydration = getFruitBushHydrationFromRootPos(level, rootPos);
+        text.accept(FarmlandBlock.getHydrationTooltip(range, false, hydration));
+        text.accept(FarmlandBlock.getAverageTemperatureTooltip(level, lowerPos, range, false));
+
+        Lifecycle currentStage = getLifecycleForCurrentMonth(level, lowerPos);
+        if (!currentStage.active()) {
+            text.accept(Component.translatable("tfc.tooltip.fruit_tree.sapling_wrong_month"));
+        } else {
+            text.accept(Component.translatable("tfc.tooltip.fruit_tree.growing"));
+        }
+
+        if (level.getBlockEntity(lowerPos) instanceof TeaBushBlockEntity bush) {
+            int years = bush.getSeasonsWithoutHarvest();
+            int maxYears = JSDConfig.TEA_BUSH_TRANSFORM_YEARS.get();
+            text.accept(Component.translatable("jsdrinks.tooltip.tea_bush.years_without_harvest", years, maxYears));
+        }
     }
 
     // ------------------------------------------------------- State / Survival
@@ -172,6 +207,10 @@ public class TeaBushBlock extends SeasonalPlantBlock {
     @Override
     public Lifecycle getLifecycleForCurrentMonth(Level level, BlockPos pos) {
         return super.getLifecycleForCurrentMonth(level, pos);
+    }
+
+    public static int getHydration(Level level, BlockPos rootPos) {
+        return getFruitBushHydrationFromRootPos(level, rootPos);
     }
 
     // --------------------------------------------------------------- Random tick
