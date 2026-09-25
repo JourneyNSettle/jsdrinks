@@ -4,7 +4,9 @@ import com.journey.jsdrinks.client.JSDClientEvents;
 import com.journey.jsdrinks.recipe.JSDItemStackModifiers;
 import com.journey.jsdrinks.registry.*;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.loading.FMLEnvironment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +17,10 @@ public class JourneyDrinks {
     public static final String MOD_ID = MODID;
     public static final Logger LOGGER = LoggerFactory.getLogger(JourneyDrinks.class);
 
-    public JourneyDrinks(IEventBus modEventBus) {
+    public JourneyDrinks(IEventBus modEventBus, ModContainer modContainer) {
         LOGGER.info("Initializing Journey Drinks addon for TFC & Firmalife");
+
+        modContainer.registerConfig(ModConfig.Type.SERVER, JSDConfig.SPEC);
 
         JSDDataComponents.DATA_COMPONENTS.register(modEventBus);
         JSDBlocks.BLOCKS.register(modEventBus);

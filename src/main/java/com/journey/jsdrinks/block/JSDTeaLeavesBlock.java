@@ -1,7 +1,7 @@
 package com.journey.jsdrinks.block;
 
-import com.journey.jsdrinks.registry.JSDDataComponents;
-import com.journey.jsdrinks.registry.JSDItems;
+import java.util.function.Supplier;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -16,24 +16,28 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import net.dries007.tfc.common.TFCTags;
-import com.journey.jsdrinks.block.entity.JSDBerryBushBlockEntity;
-import net.dries007.tfc.common.blockentities.BerryBushBlockEntity;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.plant.fruit.FruitTreeLeavesBlock;
 import net.dries007.tfc.common.blocks.plant.fruit.Lifecycle;
 import net.dries007.tfc.util.climate.ClimateRange;
 
-import java.util.function.Supplier;
+import com.journey.jsdrinks.block.entity.JSDBerryBushBlockEntity;
+import com.journey.jsdrinks.registry.JSDDataComponents;
+import com.journey.jsdrinks.registry.JSDItems;
 
 public class JSDTeaLeavesBlock extends FruitTreeLeavesBlock {
 
+    public JSDTeaLeavesBlock(ExtendedProperties properties, Lifecycle[] stages, Supplier<ClimateRange> climateRange, int flowerColor) {
+        super(properties, JSDItems.FRESH_TEA_LEAF, stages, climateRange, flowerColor);
+    }
+
+    /**
+     * Расширитель видимости: protected → public.
+     * Необходим для вызова из LargeTeaTreeFeature (другой пакет).
+     */
     @Override
     public Lifecycle getLifecycleForCurrentMonth(Level level, BlockPos pos) {
         return super.getLifecycleForCurrentMonth(level, pos);
-    }
-
-    public JSDTeaLeavesBlock(ExtendedProperties properties, Lifecycle[] stages, Supplier<ClimateRange> climateRange, int flowerColor) {
-        super(properties, JSDItems.FRESH_TEA_LEAF, stages, climateRange, flowerColor);
     }
 
     @Override
@@ -43,9 +47,11 @@ public class JSDTeaLeavesBlock extends FruitTreeLeavesBlock {
             if (!level.isClientSide()) {
                 boolean isKnife = stack.is(TFCTags.Items.TOOLS_KNIFE);
                 if (isKnife) {
+                    // Нож: больше листа (2-3 шт.), расход 1 прочности, без тегов
                     stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
                     ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(JSDItems.FRESH_TEA_LEAF.get(), 2 + level.random.nextInt(2)));
                 } else {
+                    // Рука: меньше листа (1-2 шт.), шанс тега LARGE_LEAF для пуэра (ТЗ R08/R10)
                     ItemStack drop = new ItemStack(JSDItems.FRESH_TEA_LEAF.get(), 1 + (level.random.nextFloat() < 0.35f ? 1 : 0));
                     if (level.random.nextFloat() < 0.40f) {
                         drop.set(JSDDataComponents.LARGE_LEAF.get(), true);

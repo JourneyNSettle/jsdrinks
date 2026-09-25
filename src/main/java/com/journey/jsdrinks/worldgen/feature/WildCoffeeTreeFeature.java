@@ -1,10 +1,10 @@
 package com.journey.jsdrinks.worldgen.feature;
 
 import com.journey.jsdrinks.block.JSDCoffeeLeavesBlock;
+import com.journey.jsdrinks.block.entity.JSDBerryBushBlockEntity;
 import com.journey.jsdrinks.registry.JSDBlocks;
 import com.mojang.serialization.Codec;
 import net.dries007.tfc.common.TFCTags;
-import net.dries007.tfc.common.blockentities.BerryBushBlockEntity;
 import net.dries007.tfc.common.blocks.plant.fruit.FruitTreeBranchBlock;
 import net.dries007.tfc.common.blocks.plant.fruit.Lifecycle;
 import net.dries007.tfc.util.EnvironmentHelpers;
@@ -35,7 +35,7 @@ public class WildCoffeeTreeFeature extends Feature<NoneFeatureConfiguration> {
             return false;
         }
 
-        int trunkHeight = 2 + rand.nextInt(2); // 2-3 blocks trunk
+        int trunkHeight = 2 + rand.nextInt(2); // 2-3 блока ствола
         for (int y = 0; y < trunkHeight + 2; y++) {
             if (!EnvironmentHelpers.isWorldgenReplaceable(level, pos.above(y))) {
                 return false;
@@ -50,15 +50,18 @@ public class WildCoffeeTreeFeature extends Feature<NoneFeatureConfiguration> {
         }
 
         BlockPos stemPos = pos;
-        // Set age to 3 TFC years so it can bear coffee cherries immediately (TZ 3.4)
+        // ТЗ R23: дикое кофейное дерево имеет возраст >= 3 лет → плоды доступны сразу
+        // resetCounter() сначала устанавливает lastUpdateTick = Calendars.SERVER.getTicks(),
+        // затем increaseCounter() делает lastUpdateTick -= threeYearsTicks,
+        // итого счётчик показывает «прошло 3 года» — без риска переполнения/нуля.
         long threeYearsTicks = 3L * Calendars.get(level.getLevel()).getCalendarTicksInYear();
 
-        // Place trunk
+        // Размещение ствола
         for (int y = 0; y < trunkHeight; y++) {
             setBlock(level, pos.above(y), branchBlock.defaultBlockState());
         }
 
-        // Branch out horizontally
+        // Горизонтальные ветви
         BlockPos topPos = pos.above(trunkHeight - 1);
         for (Direction dir : Direction.Plane.HORIZONTAL) {
             int branchLen = 1 + rand.nextInt(2);
@@ -72,7 +75,7 @@ public class WildCoffeeTreeFeature extends Feature<NoneFeatureConfiguration> {
             }
         }
 
-        // Top canopy
+        // Верхняя крона
         placeLeavesAround(level, pos.above(trunkHeight), leavesBlock, lifecycle, stemPos, threeYearsTicks);
 
         return true;
@@ -84,9 +87,11 @@ public class WildCoffeeTreeFeature extends Feature<NoneFeatureConfiguration> {
             BlockPos p = center.relative(d);
             if (EnvironmentHelpers.isWorldgenReplaceable(level, p)) {
                 setBlock(level, p, leafState);
-                if (level.getBlockEntity(p) instanceof BerryBushBlockEntity be) {
+                // Используем аддонный JSDBerryBushBlockEntity — TFC BerryBushBlockEntity здесь не совпадает по типу BE
+                if (level.getBlockEntity(p) instanceof JSDBerryBushBlockEntity be) {
                     be.setStemPos(stemPos);
-                    be.increaseCounter(ageTicks);
+                    be.resetCounter();         // ОБЯЗАТЕЛЬНО сначала reset — устанавливает lastUpdateTick в текущий момент
+                    be.increaseCounter(ageTicks); // затем сдвигаем на 3 года назад
                 }
             }
         }

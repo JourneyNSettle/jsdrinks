@@ -1,5 +1,7 @@
 package com.journey.jsdrinks.event;
 
+import static com.journey.jsdrinks.JourneyDrinks.MOD_ID;
+
 import com.journey.jsdrinks.registry.JSDFluids;
 import com.journey.jsdrinks.registry.JSDItems;
 import net.minecraft.core.BlockPos;
@@ -15,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
@@ -29,17 +32,15 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.dries007.tfc.common.component.heat.HeatCapability;
 import net.dries007.tfc.common.component.heat.IHeat;
 
-import static com.journey.jsdrinks.JourneyDrinks.MOD_ID;
-
 @EventBusSubscriber(modid = MOD_ID)
 public class JSDEvents {
 
-    // Cached Cold Sweat check
+    // Cached Cold Sweat check (both mod IDs supported)
     private static Boolean coldSweatLoaded = null;
 
     private static boolean isColdSweatLoaded() {
         if (coldSweatLoaded == null) {
-            coldSweatLoaded = ModList.get().isLoaded("coldsweat");
+            coldSweatLoaded = ModList.get().isLoaded("cold_sweat") || ModList.get().isLoaded("coldsweat");
         }
         return coldSweatLoaded;
     }
@@ -50,32 +51,34 @@ public class JSDEvents {
         Level level = player.level();
         if (level.isClientSide) return;
 
-        // Check every 30 ticks (~1.5s)
-        if (level.getGameTime() % 30 != 0) return;
+        // Check every 60 ticks (~3s)
+        if (level.getGameTime() % 60 != 0) return;
 
         BlockPos playerPos = player.blockPosition();
-        // Check 3x3x3 around player for any block entity cooking coffee beans
-        for (BlockPos pos : BlockPos.betweenClosed(playerPos.offset(-3, -2, -3), playerPos.offset(3, 2, 3))) {
+        // Check 3x3x3 around player (radius 1: 27 blocks)
+        for (BlockPos pos : BlockPos.betweenClosed(playerPos.offset(-1, -1, -1), playerPos.offset(1, 1, 1))) {
+            BlockState state = level.getBlockState(pos);
+            if (state.isAir() || !state.hasBlockEntity()) continue;
+
             BlockEntity be = level.getBlockEntity(pos);
-            if (be != null) {
-                IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
-                if (handler != null) {
-                    for (int i = 0; i < handler.getSlots(); i++) {
-                        var stack = handler.getStackInSlot(i);
-                        if (stack.is(JSDItems.DRIED_COFFEE_BEAN.get()) || stack.is(JSDItems.ROASTED_COFFEE_BEAN.get())) {
-                            IHeat heat = HeatCapability.get(stack);
-                            if (heat != null && heat.getTemperature() >= 180.0f) {
-                                // Play coffee roasting crackle near player
-                                level.playSound(null, pos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 0.45f, 1.2f + level.random.nextFloat() * 0.4f);
-                                return;
-                            }
+            if (be == null) continue;
+
+            IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
+            if (handler != null) {
+                for (int i = 0; i < handler.getSlots(); i++) {
+                    ItemStack stack = handler.getStackInSlot(i);
+                    if (stack.is(JSDItems.DRIED_COFFEE_BEAN.get()) || stack.is(JSDItems.ROASTED_COFFEE_BEAN.get())) {
+                        IHeat heat = HeatCapability.get(stack);
+                        if (heat != null && heat.getTemperature() >= 180.0f) {
+                            // Play coffee roasting crackle near player
+                            level.playSound(null, pos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 0.45f, 1.2f + level.random.nextFloat() * 0.4f);
+                            return;
                         }
                     }
                 }
             }
         }
     }
-
 
     /**
      * Cache the fluid in the vessel before drinking starts, so we can check it in Finish.
@@ -101,6 +104,11 @@ public class JSDEvents {
                 }
             }
         }
+        DRINKING_FLUID.remove();
+    }
+
+    @SubscribeEvent
+    public static void onStopUsingItem(LivingEntityUseItemEvent.Stop event) {
         DRINKING_FLUID.remove();
     }
 

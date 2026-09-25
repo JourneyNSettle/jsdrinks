@@ -1,17 +1,12 @@
 package com.journey.jsdrinks.client;
 
-import com.journey.jsdrinks.registry.JSDBlocks;
 import com.journey.jsdrinks.registry.JSDDataComponents;
 import com.journey.jsdrinks.registry.JSDFluids;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
@@ -28,26 +23,8 @@ public class JSDClientEvents {
     private static final ResourceLocation UNDERWATER = ResourceLocation.withDefaultNamespace("textures/misc/underwater.png");
 
     public static void init(IEventBus modBus) {
-        modBus.addListener(JSDClientEvents::clientSetup);
         modBus.addListener(JSDClientEvents::registerClientExtensions);
         NeoForge.EVENT_BUS.addListener(JSDClientEvents::onItemTooltip);
-    }
-
-    public static void clientSetup(FMLClientSetupEvent event) {
-        event.enqueueWork(() -> {
-            final RenderType solid = RenderType.solid();
-            final RenderType cutout = RenderType.cutout();
-            final RenderType cutoutMipped = RenderType.cutoutMipped();
-
-            ItemBlockRenderTypes.setRenderLayer(JSDBlocks.TEA_BUSH.get(), cutoutMipped);
-            ItemBlockRenderTypes.setRenderLayer(JSDBlocks.TEA_SAPLING.get(), cutout);
-            ItemBlockRenderTypes.setRenderLayer(JSDBlocks.COFFEE_SAPLING.get(), cutout);
-            ItemBlockRenderTypes.setRenderLayer(JSDBlocks.POTTED_TEA_SAPLING.get(), cutout);
-            ItemBlockRenderTypes.setRenderLayer(JSDBlocks.POTTED_COFFEE_SAPLING.get(), cutout);
-            ItemBlockRenderTypes.setRenderLayer(JSDBlocks.TEA_LEAVES.get(), layer -> Minecraft.useFancyGraphics() ? layer == cutoutMipped : layer == solid);
-            ItemBlockRenderTypes.setRenderLayer(JSDBlocks.COFFEE_LEAVES.get(), layer -> Minecraft.useFancyGraphics() ? layer == cutoutMipped : layer == solid);
-            ItemBlockRenderTypes.setRenderLayer(JSDBlocks.TEA_PILE.get(), cutout);
-        });
     }
 
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
