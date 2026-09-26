@@ -53,6 +53,12 @@ public class TeaBushBlockEntity extends BerryBushBlockEntity {
      */
     public void serverTick(Level level, BlockPos pos, BlockState state) {
         if (level.getGameTime() % 100 == 0) {
+            if (state.getBlock() instanceof TeaBushBlock bushBlock) {
+                bushBlock.onUpdate(level, pos, state);
+                state = level.getBlockState(pos);
+                if (!state.is(bushBlock)) return;
+            }
+
             Lifecycle lifecycle = state.hasProperty(TeaBushBlock.LIFECYCLE) ? state.getValue(TeaBushBlock.LIFECYCLE) : Lifecycle.HEALTHY;
             final ClimateRange range = JSDClimateRanges.TEA_BUSH.get();
             final int hydration = TeaBushBlock.getHydration(level, pos.below());
@@ -105,7 +111,7 @@ public class TeaBushBlockEntity extends BerryBushBlockEntity {
         // 1. Remove the UPPER part and its block entity explicitly BEFORE touching LOWER.
         if (upperState.getBlock() instanceof TeaBushBlock) {
             level.removeBlockEntity(upperPos);
-            level.setBlock(upperPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+            level.setBlock(upperPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS | Block.UPDATE_SUPPRESS_DROPS);
         }
 
         level.playSound(null, pos, SoundEvents.GRASS_PLACE, SoundSource.BLOCKS, 1.0f, 0.8f);
@@ -124,6 +130,7 @@ public class TeaBushBlockEntity extends BerryBushBlockEntity {
             level.setBlockAndUpdate(upperPos, JSDBlocks.TEA_LEAVES.get().defaultBlockState());
             if (level.getBlockEntity(upperPos) instanceof BerryBushBlockEntity leaf) {
                 leaf.setStemPos(pos);
+                leaf.resetCounter();
             }
         }
     }

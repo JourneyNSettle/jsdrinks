@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 import com.journey.jsdrinks.JourneyDrinks;
 import com.journey.jsdrinks.item.JSDSaplingItem;
 import com.journey.jsdrinks.item.TeaLeafPlaceableItem;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -40,6 +41,12 @@ public class JSDItems {
         () -> new JSDSaplingItem(JSDBlocks.TEA_BUSH.get(), JSDClimateRanges.TEA_BUSH, JSDBlocks.TEA_STAGES));
     public static final DeferredHolder<Item, Item> COFFEE_SAPLING = register("coffee_sapling",
         () -> new JSDSaplingItem(JSDBlocks.COFFEE_SAPLING.get(), JSDClimateRanges.COFFEE_TREE, JSDBlocks.COFFEE_STAGES));
+
+    // Leaves BlockItems (for creative/JEI access)
+    public static final DeferredHolder<Item, BlockItem> TEA_LEAVES_ITEM = register("plant/tea_leaves",
+        () -> new BlockItem(JSDBlocks.TEA_LEAVES.get(), new Item.Properties()));
+    public static final DeferredHolder<Item, BlockItem> COFFEE_LEAVES_ITEM = register("plant/coffee_leaves",
+        () -> new BlockItem(JSDBlocks.COFFEE_LEAVES.get(), new Item.Properties()));
 
 
     public static DeferredHolder<Item, Item> register(String name) {

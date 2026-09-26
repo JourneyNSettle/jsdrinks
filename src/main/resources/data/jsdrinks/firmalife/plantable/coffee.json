@@ -8,9 +8,9 @@
     "item": "jsdrinks:coffee_sapling"
   },
   "nutrient": {
-    "nitrogen": 0.3,
-    "phosphorous": 0.25,
-    "potassium": 0.45
+    "nitrogen": 0.40,
+    "phosphorous": 0.15,
+    "potassium": 0.40
   },
   "planter": "bonsai",
   "seed": {

@@ -1,9 +1,75 @@
 {
   "variants": {
-    "part=lower": {
+    "lifecycle=dormant,part=lower,stage=0": {
+      "model": "jsdrinks:block/plant/tea_bush_lower_dormant"
+    },
+    "lifecycle=dormant,part=lower,stage=1": {
+      "model": "jsdrinks:block/plant/tea_bush_lower_dormant"
+    },
+    "lifecycle=dormant,part=lower,stage=2": {
+      "model": "jsdrinks:block/plant/tea_bush_lower_dormant"
+    },
+    "lifecycle=dormant,part=upper,stage=0": {
+      "model": "jsdrinks:block/plant/tea_bush_upper_dormant"
+    },
+    "lifecycle=dormant,part=upper,stage=1": {
+      "model": "jsdrinks:block/plant/tea_bush_upper_dormant"
+    },
+    "lifecycle=dormant,part=upper,stage=2": {
+      "model": "jsdrinks:block/plant/tea_bush_upper_dormant"
+    },
+    "lifecycle=flowering,part=lower,stage=0": {
+      "model": "jsdrinks:block/plant/tea_bush_lower_flowering"
+    },
+    "lifecycle=flowering,part=lower,stage=1": {
+      "model": "jsdrinks:block/plant/tea_bush_lower_flowering"
+    },
+    "lifecycle=flowering,part=lower,stage=2": {
+      "model": "jsdrinks:block/plant/tea_bush_lower_flowering"
+    },
+    "lifecycle=flowering,part=upper,stage=0": {
+      "model": "jsdrinks:block/plant/tea_bush_upper_flowering"
+    },
+    "lifecycle=flowering,part=upper,stage=1": {
+      "model": "jsdrinks:block/plant/tea_bush_upper_flowering"
+    },
+    "lifecycle=flowering,part=upper,stage=2": {
+      "model": "jsdrinks:block/plant/tea_bush_upper_flowering"
+    },
+    "lifecycle=fruiting,part=lower,stage=0": {
+      "model": "jsdrinks:block/plant/tea_bush_lower_fruiting"
+    },
+    "lifecycle=fruiting,part=lower,stage=1": {
+      "model": "jsdrinks:block/plant/tea_bush_lower_fruiting"
+    },
+    "lifecycle=fruiting,part=lower,stage=2": {
+      "model": "jsdrinks:block/plant/tea_bush_lower_fruiting"
+    },
+    "lifecycle=fruiting,part=upper,stage=0": {
+      "model": "jsdrinks:block/plant/tea_bush_upper_fruiting"
+    },
+    "lifecycle=fruiting,part=upper,stage=1": {
+      "model": "jsdrinks:block/plant/tea_bush_upper_fruiting"
+    },
+    "lifecycle=fruiting,part=upper,stage=2": {
+      "model": "jsdrinks:block/plant/tea_bush_upper_fruiting"
+    },
+    "lifecycle=healthy,part=lower,stage=0": {
       "model": "jsdrinks:block/plant/tea_bush_lower"
     },
-    "part=upper": {
+    "lifecycle=healthy,part=lower,stage=1": {
+      "model": "jsdrinks:block/plant/tea_bush_lower"
+    },
+    "lifecycle=healthy,part=lower,stage=2": {
+      "model": "jsdrinks:block/plant/tea_bush_lower"
+    },
+    "lifecycle=healthy,part=upper,stage=0": {
+      "model": "jsdrinks:block/plant/tea_bush_upper"
+    },
+    "lifecycle=healthy,part=upper,stage=1": {
+      "model": "jsdrinks:block/plant/tea_bush_upper"
+    },
+    "lifecycle=healthy,part=upper,stage=2": {
       "model": "jsdrinks:block/plant/tea_bush_upper"
     }
   }

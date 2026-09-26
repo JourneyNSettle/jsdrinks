@@ -39,7 +39,7 @@
   "block.jsdrinks.plant.tea_leaves": "Tea Tree Leaves",
   "block.jsdrinks.plant.tea_branch": "Tea Tree Branch",
   "block.jsdrinks.plant.tea_growing_branch": "Growing Tea Tree Branch",
-  "block.jsdrinks.plant.tea_sapling": "Tea Tree Sapling",
+  "block.jsdrinks.plant.tea_sapling": "Tea Sapling",
   "block.jsdrinks.plant.potted.tea_sapling": "Potted Tea Tree Sapling",
   "block.jsdrinks.plant.coffee_leaves": "Coffee Tree Leaves",
   "block.jsdrinks.plant.coffee_branch": "Coffee Tree Branch",
@@ -57,5 +57,7 @@
   "fluid.jsdrinks.red_tea": "Red Tea",
   "fluid.jsdrinks.puerh_tea": "Pu-erh Tea",
   "fluid.jsdrinks.strong_puerh_tea": "Strong Pu-erh Tea",
-  "jsdrinks.tooltip.tea_bush.years_without_harvest": "Years without harvest: %s / %s (until tree)"
+  "jsdrinks.tooltip.tea_bush.years_without_harvest": "Years without harvest: %s / %s (until tree)",
+  "item.jsdrinks.plant/tea_leaves": "Tea Tree Leaves",
+  "item.jsdrinks.plant/coffee_leaves": "Coffee Tree Leaves"
 }

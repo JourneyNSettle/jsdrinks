@@ -6,6 +6,8 @@ public class JSDConfig {
     public static final ModConfigSpec SPEC;
 
     public static final ModConfigSpec.IntValue TEA_BUSH_TRANSFORM_YEARS;
+    public static final ModConfigSpec.IntValue TEA_FRUIT_REGROWTH_DAYS;
+    public static final ModConfigSpec.IntValue COFFEE_FRUIT_REGROWTH_DAYS;
 
     static {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -18,6 +20,22 @@ public class JSDConfig {
                 "With defaultMonthLength=30 one year ≈ 360 game-days."
             )
             .defineInRange("transformYears", 2, 1, 100);
+        builder.pop();
+
+        builder.push("fruit_regrowth");
+        TEA_FRUIT_REGROWTH_DAYS = builder
+            .comment(
+                "Number of TFC calendar days after harvest before a tea plant",
+                "can transition from FLOWERING back to FRUITING.",
+                "Applies to both tea bushes and tea tree leaves."
+            )
+            .defineInRange("teaRegrowthDays", 3, 1, 60);
+        COFFEE_FRUIT_REGROWTH_DAYS = builder
+            .comment(
+                "Number of TFC calendar days after harvest before a coffee tree",
+                "can transition from FLOWERING back to FRUITING."
+            )
+            .defineInRange("coffeeRegrowthDays", 8, 1, 60);
         builder.pop();
 
         SPEC = builder.build();

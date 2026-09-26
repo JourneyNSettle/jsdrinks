@@ -38,7 +38,7 @@
   "block.jsdrinks.plant.tea_leaves": "Листва чайного дерева",
   "block.jsdrinks.plant.tea_branch": "Ветвь чайного дерева",
   "block.jsdrinks.plant.tea_growing_branch": "Растущая ветвь чайного дерева",
-  "block.jsdrinks.plant.tea_sapling": "Саженец чайного дерева",
+  "block.jsdrinks.plant.tea_sapling": "Саженец чая",
   "block.jsdrinks.plant.potted.tea_sapling": "Чайное дерево в горшке",
   "block.jsdrinks.plant.coffee_leaves": "Листва кофейного дерева",
   "block.jsdrinks.plant.coffee_branch": "Ветвь кофейного дерева",
@@ -56,5 +56,7 @@
   "fluid.jsdrinks.red_tea": "Красный чай",
   "fluid.jsdrinks.puerh_tea": "Пуэр",
   "fluid.jsdrinks.strong_puerh_tea": "Крепкий пуэр",
-  "jsdrinks.tooltip.tea_bush.years_without_harvest": "Лет без сбора: %s / %s (до чайного дерева)"
+  "jsdrinks.tooltip.tea_bush.years_without_harvest": "Лет без сбора: %s / %s (до чайного дерева)",
+  "item.jsdrinks.plant/tea_leaves": "Листва чайного дерева",
+  "item.jsdrinks.plant/coffee_leaves": "Листва кофейного дерева"
 }

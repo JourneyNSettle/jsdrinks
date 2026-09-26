@@ -2,6 +2,7 @@ package com.journey.jsdrinks.block;
 
 import java.util.function.Supplier;
 
+import com.journey.jsdrinks.JSDConfig;
 import com.journey.jsdrinks.block.entity.JSDBerryBushBlockEntity;
 import com.journey.jsdrinks.registry.JSDDataComponents;
 import com.journey.jsdrinks.registry.JSDItems;
@@ -24,6 +25,8 @@ import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.plant.fruit.FruitTreeLeavesBlock;
 import net.dries007.tfc.common.blocks.plant.fruit.Lifecycle;
 import net.dries007.tfc.util.calendar.Calendars;
+import net.dries007.tfc.util.calendar.ICalendar;
+import net.dries007.tfc.util.climate.Climate;
 import net.dries007.tfc.util.climate.ClimateRange;
 
 /**
@@ -67,6 +70,16 @@ public class JSDCoffeeLeavesBlock extends FruitTreeLeavesBlock {
      *       and reset to "just born" → blocks fruiting for 2 years.</li>
      * </ul>
      */
+    /**
+     * Lifecycle update with 2-year age gate AND per-plant coffee regrowth delay.
+     * <p>
+     * Fully replaces SeasonalPlantBlock.onUpdate() to:
+     * <ol>
+     *   <li>Suppress FRUITING for young trees (&lt; 2 calendar years old).</li>
+     *   <li>Use {@link JSDConfig#COFFEE_FRUIT_REGROWTH_DAYS} (default 8 days)
+     *       instead of TFC's global {@code fruitPickBloomDelayTicks}.</li>
+     * </ol>
+     */
     @Override
     public void onUpdate(Level level, BlockPos pos, BlockState state) {
         if (state.getValue(PERSISTENT)) return;
@@ -76,10 +89,8 @@ public class JSDCoffeeLeavesBlock extends FruitTreeLeavesBlock {
             long totalCalendarTicks = Calendars.get(level).getTicks();
 
             // Detect uninitialised tick counter.
-            // Default lastUpdateTick = Integer.MIN_VALUE produces an overflowed age
-            // that exceeds the total calendar time elapsed since world creation.
             if (ageTicks < 0 || ageTicks > totalCalendarTicks) {
-                plant.resetCounter();   // set "birth" to now
+                plant.resetCounter();
                 ageTicks = 0;
             }
 
@@ -91,12 +102,33 @@ public class JSDCoffeeLeavesBlock extends FruitTreeLeavesBlock {
                     if (state.getValue(LIFECYCLE) != Lifecycle.FLOWERING) {
                         level.setBlockAndUpdate(pos, state.setValue(LIFECYCLE, Lifecycle.FLOWERING));
                     }
-                    return; // skip super.onUpdate to prevent overwriting with FRUITING
+                    return;
+                }
+            }
+
+            // Mature tree: standard lifecycle with coffee-specific regrowth delay.
+            Lifecycle currentLifecycle = state.getValue(LIFECYCLE);
+            Lifecycle expectedLifecycle = getLifecycleForCurrentMonth(level, pos);
+            if (!checkAndSetDormant(level, pos, state, currentLifecycle, expectedLifecycle)) {
+                final ClimateRange range = climateRange.get();
+                final BlockPos stemPos = plant.getStemPos();
+                final int hydration = getFruitBushHydrationFromRootPos(level, stemPos.below());
+
+                if (range.checkBoth(hydration, Climate.getAverageTemperature(level, stemPos), false)) {
+                    currentLifecycle = currentLifecycle.advanceTowards(expectedLifecycle);
+                } else {
+                    currentLifecycle = Lifecycle.DORMANT;
+                }
+
+                BlockState newState = state.setValue(LIFECYCLE, currentLifecycle);
+                long regrowthTicks = (long) JSDConfig.COFFEE_FRUIT_REGROWTH_DAYS.get() * ICalendar.CALENDAR_TICKS_IN_DAY;
+
+                if (state != newState && (currentLifecycle != Lifecycle.FLOWERING ||
+                    Calendars.SERVER.getTicks() - plant.getLastPickedTick() > regrowthTicks)) {
+                    level.setBlock(pos, newState, 3);
                 }
             }
         }
-
-        super.onUpdate(level, pos, state);
     }
 
     // -------------------------------------------------------------- Harvest (RMB)

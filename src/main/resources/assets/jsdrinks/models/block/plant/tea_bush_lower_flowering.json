@@ -1,0 +1,7 @@
+{
+  "parent": "jsdrinks:block/plant/tea_bush_lower",
+  "textures": {
+    "0": "jsdrinks:block/tea_bush_lower_flowering",
+    "particle": "jsdrinks:block/tea_bush_lower_flowering"
+  }
+}

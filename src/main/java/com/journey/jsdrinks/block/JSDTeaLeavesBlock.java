@@ -16,11 +16,16 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import net.dries007.tfc.common.TFCTags;
+import net.dries007.tfc.common.blockentities.BerryBushBlockEntity;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.plant.fruit.FruitTreeLeavesBlock;
 import net.dries007.tfc.common.blocks.plant.fruit.Lifecycle;
+import net.dries007.tfc.util.calendar.Calendars;
+import net.dries007.tfc.util.calendar.ICalendar;
+import net.dries007.tfc.util.climate.Climate;
 import net.dries007.tfc.util.climate.ClimateRange;
 
+import com.journey.jsdrinks.JSDConfig;
 import com.journey.jsdrinks.block.entity.JSDBerryBushBlockEntity;
 import com.journey.jsdrinks.registry.JSDDataComponents;
 import com.journey.jsdrinks.registry.JSDItems;
@@ -38,6 +43,39 @@ public class JSDTeaLeavesBlock extends FruitTreeLeavesBlock {
     @Override
     public Lifecycle getLifecycleForCurrentMonth(Level level, BlockPos pos) {
         return super.getLifecycleForCurrentMonth(level, pos);
+    }
+
+    // -------------------------------------------------------- Lifecycle update
+    // Overrides to use per-plant tea regrowth delay (JSDConfig.TEA_FRUIT_REGROWTH_DAYS)
+    // instead of TFC's global fruitPickBloomDelayTicks config.
+
+    @Override
+    public void onUpdate(Level level, BlockPos pos, BlockState state) {
+        if (state.getValue(PERSISTENT)) return;
+
+        if (level.getBlockEntity(pos) instanceof BerryBushBlockEntity plant) {
+            Lifecycle currentLifecycle = state.getValue(LIFECYCLE);
+            Lifecycle expectedLifecycle = getLifecycleForCurrentMonth(level, pos);
+            if (!checkAndSetDormant(level, pos, state, currentLifecycle, expectedLifecycle)) {
+                final ClimateRange range = climateRange.get();
+                final BlockPos stemPos = plant.getStemPos();
+                final int hydration = getFruitBushHydrationFromRootPos(level, stemPos.below());
+
+                if (range.checkBoth(hydration, Climate.getAverageTemperature(level, stemPos), false)) {
+                    currentLifecycle = currentLifecycle.advanceTowards(expectedLifecycle);
+                } else {
+                    currentLifecycle = Lifecycle.DORMANT;
+                }
+
+                BlockState newState = state.setValue(LIFECYCLE, currentLifecycle);
+                long regrowthTicks = (long) JSDConfig.TEA_FRUIT_REGROWTH_DAYS.get() * ICalendar.CALENDAR_TICKS_IN_DAY;
+
+                if (state != newState && (currentLifecycle != Lifecycle.FLOWERING ||
+                    Calendars.SERVER.getTicks() - plant.getLastPickedTick() > regrowthTicks)) {
+                    level.setBlock(pos, newState, 3);
+                }
+            }
+        }
     }
 
     @Override

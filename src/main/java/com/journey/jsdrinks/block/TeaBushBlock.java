@@ -10,14 +10,18 @@ import com.journey.jsdrinks.registry.JSDItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -48,8 +52,11 @@ import net.dries007.tfc.common.blocks.plant.fruit.SeasonalPlantBlock;
 import net.dries007.tfc.common.blocks.soil.FarmlandBlock;
 import net.dries007.tfc.common.blocks.soil.HoeOverlayBlock;
 import net.dries007.tfc.util.Helpers;
+import net.dries007.tfc.util.calendar.Calendars;
+import net.dries007.tfc.util.calendar.ICalendar;
 import net.dries007.tfc.util.climate.Climate;
 import net.dries007.tfc.util.climate.ClimateRange;
+
 
 /**
  * A 2-block-tall seasonal tea bush (LOWER + UPPER).
@@ -64,6 +71,7 @@ import net.dries007.tfc.util.climate.ClimateRange;
 public class TeaBushBlock extends SeasonalPlantBlock implements HoeOverlayBlock {
 
     public static final EnumProperty<ITallPlant.Part> PART = TFCBlockStateProperties.TALL_PLANT_PART;
+    public static final TagKey<Item> KNIVES_C_TAG = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "tools/knives"));
     public static final VoxelShape LOWER_SHAPE = box(2.0, 0.0, 2.0, 14.0, 16.0, 14.0);
     public static final VoxelShape UPPER_SHAPE = box(2.0, 0.0, 2.0, 14.0, 16.0, 14.0);
 
@@ -130,6 +138,36 @@ public class TeaBushBlock extends SeasonalPlantBlock implements HoeOverlayBlock 
             int years = bush.getSeasonsWithoutHarvest();
             int maxYears = JSDConfig.TEA_BUSH_TRANSFORM_YEARS.get();
             text.accept(Component.translatable("jsdrinks.tooltip.tea_bush.years_without_harvest", years, maxYears));
+        }
+    }
+
+    // -------------------------------------------------------- Lifecycle update
+    // Overrides SeasonalPlantBlock.onUpdate() to use per-plant tea regrowth delay
+    // instead of TFC's global fruitPickBloomDelayTicks config.
+
+    @Override
+    public void onUpdate(Level level, BlockPos pos, BlockState state) {
+        if (level.getBlockEntity(pos) instanceof TeaBushBlockEntity plant) {
+            Lifecycle currentLifecycle = state.getValue(LIFECYCLE);
+            Lifecycle expectedLifecycle = getLifecycleForCurrentMonth(level, pos);
+            if (!checkAndSetDormant(level, pos, state, currentLifecycle, expectedLifecycle)) {
+                final ClimateRange range = climateRange.get();
+                final int hydration = getFruitBushHydrationFromRootPos(level, pos.below());
+
+                if (range.checkBoth(hydration, Climate.getAverageTemperature(level, pos), false)) {
+                    currentLifecycle = currentLifecycle.advanceTowards(expectedLifecycle);
+                } else {
+                    currentLifecycle = Lifecycle.DORMANT;
+                }
+
+                BlockState newState = state.setValue(LIFECYCLE, currentLifecycle);
+                long regrowthTicks = (long) JSDConfig.TEA_FRUIT_REGROWTH_DAYS.get() * ICalendar.CALENDAR_TICKS_IN_DAY;
+
+                if (state != newState && (currentLifecycle != Lifecycle.FLOWERING ||
+                    Calendars.SERVER.getTicks() - plant.getLastPickedTick() > regrowthTicks)) {
+                    level.setBlock(pos, newState, 3);
+                }
+            }
         }
     }
 
@@ -263,7 +301,7 @@ public class TeaBushBlock extends SeasonalPlantBlock implements HoeOverlayBlock 
 
         if (!level.isClientSide()) {
             if (player.isCreative()) {
-                // Creative: silently remove the other half.
+                // Creative: silently remove the lower half if player broke upper
                 if (part == ITallPlant.Part.UPPER) {
                     BlockPos below = pos.below();
                     BlockState belowState = level.getBlockState(below);
@@ -271,8 +309,10 @@ public class TeaBushBlock extends SeasonalPlantBlock implements HoeOverlayBlock 
                         level.setBlock(below, Blocks.AIR.defaultBlockState(), 35);
                     }
                 }
-            } else if (part == ITallPlant.Part.LOWER) {
-                // Survival: guaranteed 1× tea sapling drop from the LOWER half.
+            } else {
+                // Survival: guaranteed exactly 1× tea sapling drop from the bush.
+                // Breaking either UPPER or LOWER drops 1 sapling.
+                // The surviving half is removed cleanly by updateShape without dropping a duplicate.
                 popResource(level, pos, new ItemStack(JSDItems.TEA_SAPLING.get()));
             }
         }
@@ -288,31 +328,32 @@ public class TeaBushBlock extends SeasonalPlantBlock implements HoeOverlayBlock 
      *   <li><b>Knife:</b> 2–3 leaves, no data-component tags, −1 durability.</li>
      *   <li><b>Bare hand:</b> 1–2 leaves, 35 % chance of {@code select} tag.</li>
      *   <li>Both reset {@code seasonsWithoutHarvest} and {@code lastPickedTick}
-     *       on the LOWER block entity.</li>
+     *       on the authoritative LOWER block entity.</li>
      * </ul>
      */
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level,
                                                BlockPos pos, Player player, InteractionHand hand,
                                                BlockHitResult hitResult) {
-        if (state.getValue(LIFECYCLE) != Lifecycle.FRUITING) {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-        }
-
-        // Resolve the LOWER position (the one that holds the block entity).
-        BlockPos lowerPos = state.getValue(PART) == ITallPlant.Part.LOWER
-            ? pos
-            : pos.below();
+        // Resolve the LOWER and UPPER positions. Both halves route to the authoritative LOWER block.
+        BlockPos lowerPos = state.getValue(PART) == ITallPlant.Part.UPPER ? pos.below() : pos;
+        BlockPos upperPos = state.getValue(PART) == ITallPlant.Part.UPPER ? pos : pos.above();
         BlockState lowerState = level.getBlockState(lowerPos);
+
         if (!lowerState.is(this) || lowerState.getValue(PART) != ITallPlant.Part.LOWER) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
 
+        // Harvesting is ONLY allowed when the bush is FRUITING
+        if (lowerState.getValue(LIFECYCLE) != Lifecycle.FRUITING) {
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        }
+
         level.playSound(player, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES,
-            SoundSource.PLAYERS, 1.0f, level.getRandom().nextFloat() + 0.7f + 0.3f);
+            SoundSource.PLAYERS, 1.0f, level.getRandom().nextFloat() * 0.2f + 0.9f);
 
         if (!level.isClientSide()) {
-            boolean isKnife = Helpers.isItem(stack, TFCTags.Items.TOOLS_KNIFE);
+            boolean isKnife = stack.is(TFCTags.Items.TOOLS_KNIFE) || stack.is(KNIVES_C_TAG);
 
             if (isKnife) {
                 // Knife path: more leaves, no tags, costs durability.
@@ -329,19 +370,18 @@ public class TeaBushBlock extends SeasonalPlantBlock implements HoeOverlayBlock 
                 ItemHandlerHelper.giveItemToPlayer(player, drop);
             }
 
-            // Reset harvest tracking on the LOWER block entity.
+            // Reset harvest tracking and fruit picked timer on the authoritative LOWER block entity.
             if (level.getBlockEntity(lowerPos) instanceof TeaBushBlockEntity bushBE) {
                 bushBE.resetSeasonsWithoutHarvest();
                 bushBE.resetLastPickedCounter();
             }
 
-            // Set both halves back to HEALTHY after harvest.
+            // Reset both halves back to HEALTHY after harvest.
             level.setBlockAndUpdate(lowerPos,
                 lowerState.setValue(LIFECYCLE, Lifecycle.HEALTHY));
 
-            BlockPos upperPos = lowerPos.above();
             BlockState upperState = level.getBlockState(upperPos);
-            if (upperState.is(this)) {
+            if (upperState.is(this) && upperState.getValue(PART) == ITallPlant.Part.UPPER) {
                 level.setBlockAndUpdate(upperPos,
                     upperState.setValue(LIFECYCLE, Lifecycle.HEALTHY));
             }

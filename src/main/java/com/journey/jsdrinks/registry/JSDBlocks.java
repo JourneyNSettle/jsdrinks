@@ -30,14 +30,16 @@ public class JSDBlocks {
     public static final DeferredRegister<Block> BLOCKS =
             DeferredRegister.create(Registries.BLOCK, JourneyDrinks.MODID);
 
-    // Tea Lifecycle: 2 windows (spring: Apr-May flowering/fruiting, late summer: Jul-Aug flowering/fruiting)
+    // Tea Lifecycle (evergreen camellia): Jan-Mar HEALTHY, Apr FLOWERING, May-Jun FRUITING,
+    // Jul HEALTHY, Aug-Sep FRUITING, Oct HEALTHY, Nov-Dec DORMANT
     public static final Lifecycle[] TEA_STAGES = new Lifecycle[]{
-            DORMANT, HEALTHY, FLOWERING, FRUITING, HEALTHY, FLOWERING, FRUITING, HEALTHY, DORMANT, DORMANT, DORMANT, DORMANT
+            HEALTHY, HEALTHY, HEALTHY, FLOWERING, FRUITING, FRUITING, HEALTHY, FRUITING, FRUITING, HEALTHY, DORMANT, DORMANT
     };
 
-    // Coffee Lifecycle: Summer fruiting (May-Jun flowering, Jul-Aug fruiting)
+    // Coffee Lifecycle: Jan-Feb DORMANT, Mar-Apr HEALTHY, May-Jun FLOWERING,
+    // Jul-Aug HEALTHY, Sep-Oct FRUITING, Nov-Dec DORMANT
     public static final Lifecycle[] COFFEE_STAGES = new Lifecycle[]{
-            DORMANT, DORMANT, HEALTHY, HEALTHY, FLOWERING, FLOWERING, FRUITING, FRUITING, HEALTHY, DORMANT, DORMANT, DORMANT
+            DORMANT, DORMANT, HEALTHY, HEALTHY, FLOWERING, FLOWERING, HEALTHY, HEALTHY, FRUITING, FRUITING, DORMANT, DORMANT
     };
 
     // --- Tea Bush ---
@@ -80,7 +82,7 @@ public class JSDBlocks {
 
     public static final DeferredHolder<Block, JSDFruitTreeSaplingBlock> COFFEE_SAPLING = BLOCKS.register("plant/coffee_sapling", () ->
             new JSDFruitTreeSaplingBlock(ExtendedProperties.of(MapColor.PLANT).noCollission().randomTicks().strength(0).sound(SoundType.GRASS).blockEntity(JSDBlockEntities.TICKING_PLANT).flammableLikeLeaves(),
-                    COFFEE_GROWING_BRANCH, () -> 8 * ICalendar.CALENDAR_TICKS_IN_DAY, JSDClimateRanges.COFFEE_TREE, COFFEE_STAGES));
+                    COFFEE_GROWING_BRANCH, () -> 12 * ICalendar.CALENDAR_TICKS_IN_DAY, JSDClimateRanges.COFFEE_TREE, COFFEE_STAGES));
 
     public static final DeferredHolder<Block, FlowerPotBlock> POTTED_COFFEE_SAPLING = BLOCKS.register("plant/potted/coffee_sapling", () ->
             new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, COFFEE_SAPLING, BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_ACACIA_SAPLING)));

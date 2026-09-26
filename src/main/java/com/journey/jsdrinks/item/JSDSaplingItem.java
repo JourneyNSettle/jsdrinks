@@ -1,9 +1,6 @@
 package com.journey.jsdrinks.item;
 
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,11 +29,5 @@ public class JSDSaplingItem extends BlockItem implements PlantableInfo {
     @Override
     public @Nullable List<Lifecycle> getLifecycleInfo() {
         return stages;
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(stack, context, tooltip, flag);
-        PlantableInfo.addTooltipInfo(stack, tooltip::add);
     }
 }
