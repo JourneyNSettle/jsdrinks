@@ -141,10 +141,9 @@ public class JSDCoffeeLeavesBlock extends FruitTreeLeavesBlock {
 
                 BlockState newState = state.setValue(LIFECYCLE, currentLifecycle);
 
-                // Coffee lifecycle: FLOWERING is always the expected month (May-Jun),
-                // so bloom delay applies when current is FLOWERING and expected is FLOWERING.
+                // Regrowth delay: prevent transition into FLOWERING until coffeeRegrowthDays have passed since last harvest.
                 boolean bloomDelayActive = false;
-                if (currentLifecycle == Lifecycle.FLOWERING && expectedLifecycle == Lifecycle.FLOWERING) {
+                if (currentLifecycle == Lifecycle.FLOWERING) {
                     long regrowthTicks = (long) JSDConfig.COFFEE_FRUIT_REGROWTH_DAYS.get() * ICalendar.CALENDAR_TICKS_IN_DAY;
                     bloomDelayActive = Calendars.SERVER.getTicks() - plant.getLastPickedTick() <= regrowthTicks;
                 }

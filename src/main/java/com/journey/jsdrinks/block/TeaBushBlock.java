@@ -168,12 +168,9 @@ public class TeaBushBlock extends SeasonalPlantBlock implements HoeOverlayBlock 
 
                 BlockState newState = state.setValue(LIFECYCLE, currentLifecycle);
 
-                // Apply bloom delay ONLY when FLOWERING is both the current computed state
-                // AND the expected month lifecycle. When FLOWERING is a transitional step
-                // toward a FRUITING month (e.g. tea August 2nd wave: HEALTHY→FLOWERING→FRUITING),
-                // the delay does not apply.
+                // Regrowth delay: prevent transition into FLOWERING until regrowthDays have passed since last harvest.
                 boolean bloomDelayActive = false;
-                if (currentLifecycle == Lifecycle.FLOWERING && expectedLifecycle == Lifecycle.FLOWERING) {
+                if (currentLifecycle == Lifecycle.FLOWERING) {
                     long regrowthTicks = (long) JSDConfig.TEA_FRUIT_REGROWTH_DAYS.get() * ICalendar.CALENDAR_TICKS_IN_DAY;
                     bloomDelayActive = Calendars.SERVER.getTicks() - plant.getLastPickedTick() <= regrowthTicks;
                 }
