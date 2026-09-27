@@ -7,8 +7,10 @@ import com.journey.jsdrinks.block.entity.JSDBerryBushBlockEntity;
 import com.journey.jsdrinks.registry.JSDDataComponents;
 import com.journey.jsdrinks.registry.JSDItems;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,12 +36,15 @@ import net.dries007.tfc.util.climate.ClimateRange;
  * <p>
  * TZ §3.4: coffee trees must be at least 2 TFC calendar years old before they
  * can bear fruit.  During the first 2 years FRUITING is suppressed (shows
- * FLOWERING instead).  The age is tracked via the leaf block-entity's own tick
- * counter ({@link BerryBushBlockEntity#getTicksSinceUpdate()}).
+ * FLOWERING instead).
  * <p>
- * <b>Architectural note:</b> the stem (trunk) block is a static
- * {@code FruitTreeBranchBlock} which does NOT carry a BlockEntity for mature
- * trees.  Therefore we must NOT try to read age from {@code stemPos}.
+ * The age is tracked via {@link JSDBerryBushBlockEntity#getPlacedTick()}, which
+ * records the calendar tick at which the block entity was first created and is
+ * never reset. This is more reliable than {@code getTicksSinceUpdate()} which
+ * resets on growth events.
+ * <p>
+ * <b>Frost-kill:</b> dies when instant temperature ≤ {@link JSDConfig#COFFEE_FROST_KILL_TEMP}
+ * (default 0 °C).
  */
 public class JSDCoffeeLeavesBlock extends FruitTreeLeavesBlock {
 
@@ -54,22 +59,24 @@ public class JSDCoffeeLeavesBlock extends FruitTreeLeavesBlock {
         return super.getLifecycleForCurrentMonth(level, pos);
     }
 
+    // -------------------------------------------------------- Frost check
+
+    @Override
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        // Frost-kill: if instant temperature ≤ threshold, destroy the leaf block.
+        float instantTemp = Climate.getInstantTemperature(level, pos);
+        if (instantTemp <= JSDConfig.COFFEE_FROST_KILL_TEMP.get()) {
+            level.removeBlockEntity(pos);
+            level.destroyBlock(pos, false);
+            return;
+        }
+
+        // Parent handles lifecycle progression via onUpdate().
+        super.randomTick(state, level, pos, random);
+    }
+
     // -------------------------------------------------------- Age-gated fruiting
 
-    /**
-     * Lifecycle update with 2-year age gate.
-     * <p>
-     * The leaf BE's tick counter is used as the single source of truth for tree age:
-     * <ul>
-     *   <li><b>Worldgen trees:</b> {@code WildCoffeeTreeFeature} calls
-     *       {@code resetCounter()} + {@code increaseCounter(3yearTicks)} so the
-     *       counter reads ≥ 3 years from the moment of generation → fruit immediately.</li>
-     *   <li><b>Player trees:</b> leaves are created by {@code addLeaves()} inside
-     *       {@code GrowingFruitTreeBranchBlock} with an uninitialised counter
-     *       ({@code lastUpdateTick = Integer.MIN_VALUE}).  We detect this here
-     *       and reset to "just born" → blocks fruiting for 2 years.</li>
-     * </ul>
-     */
     /**
      * Lifecycle update with 2-year age gate AND per-plant coffee regrowth delay.
      * <p>
@@ -79,23 +86,34 @@ public class JSDCoffeeLeavesBlock extends FruitTreeLeavesBlock {
      *   <li>Use {@link JSDConfig#COFFEE_FRUIT_REGROWTH_DAYS} (default 8 days)
      *       instead of TFC's global {@code fruitPickBloomDelayTicks}.</li>
      * </ol>
+     * <p>
+     * The age gate uses {@link JSDBerryBushBlockEntity#getPlacedTick()}, which is
+     * set once on block entity creation and never reset, providing reliable
+     * absolute age measurement.
+     * <ul>
+     *   <li><b>Worldgen trees:</b> {@code WildCoffeeTreeFeature} calls
+     *       {@code setPlacedTick(currentTick - 3yearTicks)} so the tree reads
+     *       as ≥ 3 years old → fruit immediately.</li>
+     *   <li><b>Player trees:</b> leaves are created with placedTick = current time
+     *       → blocks fruiting for 2 years.</li>
+     * </ul>
      */
     @Override
     public void onUpdate(Level level, BlockPos pos, BlockState state) {
         if (state.getValue(PERSISTENT)) return;
 
         if (level.getBlockEntity(pos) instanceof BerryBushBlockEntity plant) {
-            long ageTicks = plant.getTicksSinceUpdate();
-            long totalCalendarTicks = Calendars.get(level).getTicks();
+            // Age gate using placedTick for reliable absolute age measurement
+            long currentTick = Calendars.get(level).getTicks();
+            long twoYearsTicks = 2L * Calendars.get(level).getCalendarTicksInYear();
 
-            // Detect uninitialised tick counter.
-            if (ageTicks < 0 || ageTicks > totalCalendarTicks) {
-                plant.resetCounter();
-                ageTicks = 0;
+            boolean isYoung = false;
+            if (plant instanceof JSDBerryBushBlockEntity jsdPlant) {
+                long ageTicks = currentTick - jsdPlant.getPlacedTick();
+                isYoung = ageTicks < twoYearsTicks;
             }
 
-            long twoYearsTicks = 2L * Calendars.get(level).getCalendarTicksInYear();
-            if (ageTicks < twoYearsTicks) {
+            if (isYoung) {
                 // Young tree: suppress FRUITING → show FLOWERING instead.
                 Lifecycle expectedLifecycle = getLifecycleForCurrentMonth(level, pos);
                 if (expectedLifecycle == Lifecycle.FRUITING) {
@@ -106,7 +124,8 @@ public class JSDCoffeeLeavesBlock extends FruitTreeLeavesBlock {
                 }
             }
 
-            // Mature tree: standard lifecycle with coffee-specific regrowth delay.
+            // Mature tree (or non-FRUITING month for young tree): standard lifecycle
+            // with coffee-specific regrowth delay.
             Lifecycle currentLifecycle = state.getValue(LIFECYCLE);
             Lifecycle expectedLifecycle = getLifecycleForCurrentMonth(level, pos);
             if (!checkAndSetDormant(level, pos, state, currentLifecycle, expectedLifecycle)) {
@@ -121,10 +140,16 @@ public class JSDCoffeeLeavesBlock extends FruitTreeLeavesBlock {
                 }
 
                 BlockState newState = state.setValue(LIFECYCLE, currentLifecycle);
-                long regrowthTicks = (long) JSDConfig.COFFEE_FRUIT_REGROWTH_DAYS.get() * ICalendar.CALENDAR_TICKS_IN_DAY;
 
-                if (state != newState && (currentLifecycle != Lifecycle.FLOWERING ||
-                    Calendars.SERVER.getTicks() - plant.getLastPickedTick() > regrowthTicks)) {
+                // Coffee lifecycle: FLOWERING is always the expected month (May-Jun),
+                // so bloom delay applies when current is FLOWERING and expected is FLOWERING.
+                boolean bloomDelayActive = false;
+                if (currentLifecycle == Lifecycle.FLOWERING && expectedLifecycle == Lifecycle.FLOWERING) {
+                    long regrowthTicks = (long) JSDConfig.COFFEE_FRUIT_REGROWTH_DAYS.get() * ICalendar.CALENDAR_TICKS_IN_DAY;
+                    bloomDelayActive = Calendars.SERVER.getTicks() - plant.getLastPickedTick() <= regrowthTicks;
+                }
+
+                if (state != newState && !bloomDelayActive) {
                     level.setBlock(pos, newState, 3);
                 }
             }

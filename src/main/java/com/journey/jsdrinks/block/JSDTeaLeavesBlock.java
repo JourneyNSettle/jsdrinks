@@ -6,14 +6,17 @@ import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
@@ -35,6 +38,21 @@ import com.journey.jsdrinks.block.entity.JSDBerryBushBlockEntity;
 import com.journey.jsdrinks.registry.JSDDataComponents;
 import com.journey.jsdrinks.registry.JSDItems;
 
+/**
+ * Tea tree leaves block.
+ * <p>
+ * Extends {@link FruitTreeLeavesBlock} with:
+ * <ul>
+ *   <li>Per-plant tea regrowth delay ({@link JSDConfig#TEA_FRUIT_REGROWTH_DAYS})
+ *       instead of TFC's global {@code fruitPickBloomDelayTicks}.</li>
+ *   <li>Fixed bloom delay logic: delay only gates FLOWERING→FRUITING when FLOWERING
+ *       is the expected month lifecycle (April). When FLOWERING is a transitional step
+ *       toward a FRUITING month (August 2nd wave), no delay applies.</li>
+ *   <li>Frost-kill: leaf block is destroyed when instant temperature ≤
+ *       {@link JSDConfig#TEA_FROST_KILL_TEMP} (default −5 °C).</li>
+ *   <li>Proper hydration via stem → root soil traversal.</li>
+ * </ul>
+ */
 public class JSDTeaLeavesBlock extends FruitTreeLeavesBlock {
 
     public JSDTeaLeavesBlock(ExtendedProperties properties, Lifecycle[] stages, Supplier<ClimateRange> climateRange, int flowerColor) {
@@ -95,10 +113,27 @@ public class JSDTeaLeavesBlock extends FruitTreeLeavesBlock {
         text.accept(FarmlandBlock.getAverageTemperatureTooltip(level, stemPos, range, false));
     }
 
+    // -------------------------------------------------------- Frost check
+
+    @Override
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        // Frost-kill: if instant temperature ≤ threshold, destroy the leaf block.
+        float instantTemp = Climate.getInstantTemperature(level, pos);
+        if (instantTemp <= JSDConfig.TEA_FROST_KILL_TEMP.get()) {
+            level.removeBlockEntity(pos);
+            level.destroyBlock(pos, false);
+            return;
+        }
+
+        // Parent handles lifecycle progression via onUpdate().
+        super.randomTick(state, level, pos, random);
+    }
+
     // -------------------------------------------------------- Lifecycle update
     // Overrides to use per-plant tea regrowth delay (JSDConfig.TEA_FRUIT_REGROWTH_DAYS)
     // instead of TFC's global fruitPickBloomDelayTicks config.
     // Also uses stem → root soil traversal for hydration.
+    // Fixed: bloom delay only applies when FLOWERING is the expected month lifecycle.
 
     @Override
     public void onUpdate(Level level, BlockPos pos, BlockState state) {
@@ -119,10 +154,17 @@ public class JSDTeaLeavesBlock extends FruitTreeLeavesBlock {
                 }
 
                 BlockState newState = state.setValue(LIFECYCLE, currentLifecycle);
-                long regrowthTicks = (long) JSDConfig.TEA_FRUIT_REGROWTH_DAYS.get() * ICalendar.CALENDAR_TICKS_IN_DAY;
 
-                if (state != newState && (currentLifecycle != Lifecycle.FLOWERING ||
-                    Calendars.SERVER.getTicks() - plant.getLastPickedTick() > regrowthTicks)) {
+                // Apply bloom delay ONLY when FLOWERING is both the current computed state
+                // AND the expected month lifecycle. When FLOWERING is a transitional step
+                // toward a FRUITING month (e.g. tea August 2nd wave), no delay applies.
+                boolean bloomDelayActive = false;
+                if (currentLifecycle == Lifecycle.FLOWERING && expectedLifecycle == Lifecycle.FLOWERING) {
+                    long regrowthTicks = (long) JSDConfig.TEA_FRUIT_REGROWTH_DAYS.get() * ICalendar.CALENDAR_TICKS_IN_DAY;
+                    bloomDelayActive = Calendars.SERVER.getTicks() - plant.getLastPickedTick() <= regrowthTicks;
+                }
+
+                if (state != newState && !bloomDelayActive) {
                     level.setBlock(pos, newState, 3);
                 }
             }

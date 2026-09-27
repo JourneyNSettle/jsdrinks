@@ -66,6 +66,8 @@ import net.dries007.tfc.util.climate.ClimateRange;
  *   <li>Harvest with a knife gives 2–3 leaves (no tags) and costs 1 durability.</li>
  *   <li>After {@code JSDConfig.TEA_BUSH_TRANSFORM_YEARS} calendar years without harvest
  *       the bush irreversibly transforms into a tea tree.</li>
+ *   <li>Frost-kill: dies when instant temperature ≤ {@code JSDConfig.TEA_FROST_KILL_TEMP}
+ *       (default −5 °C).</li>
  * </ul>
  */
 public class TeaBushBlock extends SeasonalPlantBlock implements HoeOverlayBlock {
@@ -144,6 +146,10 @@ public class TeaBushBlock extends SeasonalPlantBlock implements HoeOverlayBlock 
     // -------------------------------------------------------- Lifecycle update
     // Overrides SeasonalPlantBlock.onUpdate() to use per-plant tea regrowth delay
     // instead of TFC's global fruitPickBloomDelayTicks config.
+    //
+    // Key fix: the bloom delay should only gate FLOWERING→FRUITING when FLOWERING
+    // is the expected lifecycle for the current month. When FLOWERING is just a
+    // transitional step toward FRUITING (e.g. August 2nd wave), no delay applies.
 
     @Override
     public void onUpdate(Level level, BlockPos pos, BlockState state) {
@@ -161,10 +167,18 @@ public class TeaBushBlock extends SeasonalPlantBlock implements HoeOverlayBlock 
                 }
 
                 BlockState newState = state.setValue(LIFECYCLE, currentLifecycle);
-                long regrowthTicks = (long) JSDConfig.TEA_FRUIT_REGROWTH_DAYS.get() * ICalendar.CALENDAR_TICKS_IN_DAY;
 
-                if (state != newState && (currentLifecycle != Lifecycle.FLOWERING ||
-                    Calendars.SERVER.getTicks() - plant.getLastPickedTick() > regrowthTicks)) {
+                // Apply bloom delay ONLY when FLOWERING is both the current computed state
+                // AND the expected month lifecycle. When FLOWERING is a transitional step
+                // toward a FRUITING month (e.g. tea August 2nd wave: HEALTHY→FLOWERING→FRUITING),
+                // the delay does not apply.
+                boolean bloomDelayActive = false;
+                if (currentLifecycle == Lifecycle.FLOWERING && expectedLifecycle == Lifecycle.FLOWERING) {
+                    long regrowthTicks = (long) JSDConfig.TEA_FRUIT_REGROWTH_DAYS.get() * ICalendar.CALENDAR_TICKS_IN_DAY;
+                    bloomDelayActive = Calendars.SERVER.getTicks() - plant.getLastPickedTick() <= regrowthTicks;
+                }
+
+                if (state != newState && !bloomDelayActive) {
                     level.setBlock(pos, newState, 3);
                 }
             }
@@ -258,6 +272,13 @@ public class TeaBushBlock extends SeasonalPlantBlock implements HoeOverlayBlock 
         // Only the LOWER half drives all logic.
         if (state.getValue(PART) != ITallPlant.Part.LOWER) return;
 
+        // 0. Frost check: if instant temperature ≤ threshold, kill the bush.
+        float instantTemp = Climate.getInstantTemperature(level, pos);
+        if (instantTemp <= JSDConfig.TEA_FROST_KILL_TEMP.get()) {
+            killBush(level, pos);
+            return;
+        }
+
         // 1. Run the standard SeasonalPlantBlock lifecycle progression
         //    (DORMANT ↔ HEALTHY ↔ FLOWERING ↔ FRUITING based on month & climate).
         //    We call onUpdate() directly instead of super.randomTick() because
@@ -291,6 +312,22 @@ public class TeaBushBlock extends SeasonalPlantBlock implements HoeOverlayBlock 
             level.setBlockAndUpdate(upperPos,
                 upperState.setValue(LIFECYCLE, state.getValue(LIFECYCLE)));
         }
+    }
+
+    /**
+     * Destroys both halves of the tea bush (frost-kill or other death).
+     * Replaces with dead bush plants for visual feedback.
+     */
+    private void killBush(ServerLevel level, BlockPos lowerPos) {
+        BlockPos upperPos = lowerPos.above();
+        BlockState upperState = level.getBlockState(upperPos);
+        if (upperState.is(this) && upperState.getValue(PART) == ITallPlant.Part.UPPER) {
+            level.removeBlockEntity(upperPos);
+            level.setBlock(upperPos, Blocks.AIR.defaultBlockState(),
+                Block.UPDATE_CLIENTS | Block.UPDATE_SUPPRESS_DROPS);
+        }
+        level.removeBlockEntity(lowerPos);
+        level.destroyBlock(lowerPos, false);
     }
 
     // -------------------------------------------------------- Destroy / Break

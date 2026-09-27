@@ -122,7 +122,9 @@ public class WildCoffeeTreeFeature extends Feature<NoneFeatureConfiguration> {
                     if (level.getBlockEntity(leafPos) instanceof JSDBerryBushBlockEntity be) {
                         be.setStemPos(stemPos);
                         be.resetCounter();
-                        be.increaseCounter(threeYearsTicks);
+                        // Backdate placedTick by 3 years so the tree is immediately mature
+                        // (passes the 2-year age gate in JSDCoffeeLeavesBlock.onUpdate()).
+                        be.setPlacedTick(Calendars.get(level.getLevel()).getTicks() - threeYearsTicks);
                     }
                 }
             }
