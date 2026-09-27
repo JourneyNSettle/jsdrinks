@@ -2,6 +2,6 @@
   "ingredient": {
     "item": "jsdrinks:roasted_coffee_bean"
   },
-  "hunger": 0,
+  "edible": false,
   "decay_modifier": 0.2
 }

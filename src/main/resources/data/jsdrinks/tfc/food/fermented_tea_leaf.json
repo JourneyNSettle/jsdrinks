@@ -2,6 +2,6 @@
   "ingredient": {
     "item": "jsdrinks:fermented_tea_leaf"
   },
-  "hunger": 0,
+  "edible": false,
   "decay_modifier": 1.833
 }
