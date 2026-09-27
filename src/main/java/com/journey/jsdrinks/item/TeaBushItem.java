@@ -35,4 +35,9 @@ public class TeaBushItem extends BlockItem implements PlantableInfo {
     public @Nullable List<Lifecycle> getLifecycleInfo() {
         return stages;
     }
+
+    @Override
+    public String getDescriptionId() {
+        return this.getOrCreateDescriptionId();
+    }
 }

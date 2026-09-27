@@ -366,6 +366,11 @@ public class TeaBushBlock extends SeasonalPlantBlock implements HoeOverlayBlock 
         return super.playerWillDestroy(level, pos, state, player);
     }
 
+    @Override
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
+        return new ItemStack(JSDItems.TEA_BUSH.get());
+    }
+
     // ----------------------------------------------------------- Harvest (RMB)
 
     /**

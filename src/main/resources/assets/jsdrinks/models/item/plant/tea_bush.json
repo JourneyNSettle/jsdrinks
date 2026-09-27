@@ -1,3 +1,6 @@
 {
-  "parent": "jsdrinks:block/plant/tea_bush_lower"
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "jsdrinks:item/tea_bush_sapling"
+  }
 }

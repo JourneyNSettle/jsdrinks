@@ -6,6 +6,7 @@ import com.journey.jsdrinks.block.JSDFruitTreeSaplingBlock;
 import com.journey.jsdrinks.block.JSDGrowingFruitTreeBranchBlock;
 import com.journey.jsdrinks.block.JSDTeaLeavesBlock;
 import com.journey.jsdrinks.block.TeaBushBlock;
+import com.journey.jsdrinks.block.TeaBushSaplingBlock;
 import com.journey.jsdrinks.block.TeaPileBlock;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
@@ -60,9 +61,9 @@ public class JSDBlocks {
             new JSDGrowingFruitTreeBranchBlock(ExtendedProperties.of(MapColor.WOOD).sound(SoundType.SCAFFOLDING).randomTicks().strength(1.0f).blockEntity(JSDBlockEntities.TICKING_PLANT).flammableLikeLogs(),
                     TEA_BRANCH, () -> TEA_LEAVES.get(), JSDClimateRanges.TEA_TREE));
 
-    public static final DeferredHolder<Block, JSDFruitTreeSaplingBlock> TEA_SAPLING = BLOCKS.register("plant/tea_sapling", () ->
-            new JSDFruitTreeSaplingBlock(ExtendedProperties.of(MapColor.PLANT).noCollission().randomTicks().strength(0).sound(SoundType.GRASS).blockEntity(JSDBlockEntities.TICKING_PLANT).flammableLikeLeaves(),
-                    TEA_GROWING_BRANCH, () -> 8 * ICalendar.CALENDAR_TICKS_IN_DAY, JSDClimateRanges.TEA_TREE, TEA_STAGES));
+    public static final DeferredHolder<Block, TeaBushSaplingBlock> TEA_SAPLING = BLOCKS.register("plant/tea_sapling", () ->
+            new TeaBushSaplingBlock(ExtendedProperties.of(MapColor.PLANT).noCollission().randomTicks().strength(0).sound(SoundType.GRASS).blockEntity(JSDBlockEntities.TICKING_PLANT).flammableLikeLeaves(),
+                    TEA_BUSH, () -> 8 * ICalendar.CALENDAR_TICKS_IN_DAY, JSDClimateRanges.TEA_BUSH, TEA_STAGES));
 
     public static final DeferredHolder<Block, FlowerPotBlock> POTTED_TEA_SAPLING = BLOCKS.register("plant/potted/tea_sapling", () ->
             new FlowerPotBlock(() -> (FlowerPotBlock) Blocks.FLOWER_POT, TEA_SAPLING, BlockBehaviour.Properties.ofFullCopy(Blocks.POTTED_ACACIA_SAPLING)));

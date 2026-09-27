@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "jsdrinks:block/fruit_tree/tea_sapling"
+    "layer0": "jsdrinks:item/tea_sapling"
   }
 }

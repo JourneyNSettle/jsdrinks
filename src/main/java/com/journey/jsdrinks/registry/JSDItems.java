@@ -39,7 +39,7 @@ public class JSDItems {
 
     // Saplings & bush items
     public static final DeferredHolder<Item, Item> TEA_SAPLING = register("tea_sapling",
-        () -> new JSDSaplingItem(JSDBlocks.TEA_BUSH.get(), JSDClimateRanges.TEA_BUSH, JSDBlocks.TEA_STAGES));
+        () -> new JSDSaplingItem(JSDBlocks.TEA_SAPLING.get(), JSDClimateRanges.TEA_BUSH, JSDBlocks.TEA_STAGES));
     public static final DeferredHolder<Item, Item> TEA_BUSH = register("tea_bush",
         () -> new TeaBushItem(JSDBlocks.TEA_BUSH.get(), JSDClimateRanges.TEA_BUSH, JSDBlocks.TEA_STAGES));
     public static final DeferredHolder<Item, Item> COFFEE_SAPLING = register("coffee_sapling",
