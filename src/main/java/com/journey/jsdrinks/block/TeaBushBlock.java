@@ -310,10 +310,19 @@ public class TeaBushBlock extends SeasonalPlantBlock implements HoeOverlayBlock 
                     }
                 }
             } else {
-                // Survival: guaranteed exactly 1× tea sapling drop from the bush.
-                // Breaking either UPPER or LOWER drops 1 sapling.
+                // Survival: drop 1× tea bush item (not sapling).
+                // Breaking either UPPER or LOWER drops 1 bush.
                 // The surviving half is removed cleanly by updateShape without dropping a duplicate.
-                popResource(level, pos, new ItemStack(JSDItems.TEA_SAPLING.get()));
+                popResource(level, pos, new ItemStack(JSDItems.TEA_BUSH.get()));
+
+                // If the bush was FRUITING, also drop a tea leaf.
+                BlockPos lowerPos = part == ITallPlant.Part.UPPER ? pos.below() : pos;
+                BlockState lowerState = level.getBlockState(lowerPos);
+                if (lowerState.is(this) && lowerState.getValue(LIFECYCLE) == Lifecycle.FRUITING) {
+                    popResource(level, pos, new ItemStack(JSDItems.FRESH_TEA_LEAF.get()));
+                } else if (part == ITallPlant.Part.LOWER && state.getValue(LIFECYCLE) == Lifecycle.FRUITING) {
+                    popResource(level, pos, new ItemStack(JSDItems.FRESH_TEA_LEAF.get()));
+                }
             }
         }
 

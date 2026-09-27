@@ -3,6 +3,7 @@ package com.journey.jsdrinks.registry;
 import java.util.function.Supplier;
 import com.journey.jsdrinks.JourneyDrinks;
 import com.journey.jsdrinks.item.JSDSaplingItem;
+import com.journey.jsdrinks.item.TeaBushItem;
 import com.journey.jsdrinks.item.TeaLeafPlaceableItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -36,9 +37,11 @@ public class JSDItems {
     public static final DeferredHolder<Item, Item> STRONG_PUERH_TEA = register("strong_puerh_tea");
     public static final DeferredHolder<Item, Item> STRONG_PUERH_TEA_LEAF = STRONG_PUERH_TEA;
 
-    // Saplings
+    // Saplings & bush items
     public static final DeferredHolder<Item, Item> TEA_SAPLING = register("tea_sapling",
         () -> new JSDSaplingItem(JSDBlocks.TEA_BUSH.get(), JSDClimateRanges.TEA_BUSH, JSDBlocks.TEA_STAGES));
+    public static final DeferredHolder<Item, Item> TEA_BUSH = register("tea_bush",
+        () -> new TeaBushItem(JSDBlocks.TEA_BUSH.get(), JSDClimateRanges.TEA_BUSH, JSDBlocks.TEA_STAGES));
     public static final DeferredHolder<Item, Item> COFFEE_SAPLING = register("coffee_sapling",
         () -> new JSDSaplingItem(JSDBlocks.COFFEE_SAPLING.get(), JSDClimateRanges.COFFEE_TREE, JSDBlocks.COFFEE_STAGES));
 

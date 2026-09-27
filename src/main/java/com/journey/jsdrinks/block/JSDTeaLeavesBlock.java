@@ -1,8 +1,11 @@
 package com.journey.jsdrinks.block;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -20,6 +23,8 @@ import net.dries007.tfc.common.blockentities.BerryBushBlockEntity;
 import net.dries007.tfc.common.blocks.ExtendedProperties;
 import net.dries007.tfc.common.blocks.plant.fruit.FruitTreeLeavesBlock;
 import net.dries007.tfc.common.blocks.plant.fruit.Lifecycle;
+import net.dries007.tfc.common.blocks.soil.FarmlandBlock;
+import net.dries007.tfc.util.Helpers;
 import net.dries007.tfc.util.calendar.Calendars;
 import net.dries007.tfc.util.calendar.ICalendar;
 import net.dries007.tfc.util.climate.Climate;
@@ -45,9 +50,55 @@ public class JSDTeaLeavesBlock extends FruitTreeLeavesBlock {
         return super.getLifecycleForCurrentMonth(level, pos);
     }
 
+    // -------------------------------------------------------- Hydration helper
+    // The leaf block entity stores stemPos (set during tree growth or placement).
+    // To find the root soil, we walk DOWN from stemPos through branch/trunk blocks.
+
+    /**
+     * Walks downward from {@code stemPos} through fruit-tree branch blocks
+     * until it reaches the soil (or a non-branch block). Returns the hydration
+     * at the block directly below the lowest branch.
+     */
+    private static int getHydrationFromStem(Level level, BlockPos stemPos) {
+        BlockPos.MutableBlockPos cursor = stemPos.mutable();
+        // Walk down through branch blocks to find the root soil
+        for (int i = 0; i < 16; i++) {
+            BlockPos below = cursor.below();
+            BlockState belowState = level.getBlockState(below);
+            if (Helpers.isBlock(belowState, TFCTags.Blocks.FRUIT_TREE_BRANCH)) {
+                cursor.move(Direction.DOWN);
+            } else {
+                // Found the soil block
+                return getFruitBushHydrationFromRootPos(level, cursor.below());
+            }
+        }
+        // Fallback: just use stemPos.below()
+        return getFruitBushHydrationFromRootPos(level, stemPos.below());
+    }
+
+    // -------------------------------------------------------- Hoe overlay
+    // Override to properly resolve hydration via stem → root soil traversal.
+
+    @Override
+    public void addHoeOverlayInfo(Level level, BlockPos pos, BlockState state, Consumer<Component> text, boolean isDebug) {
+        final ClimateRange range = climateRange.get();
+
+        final BlockPos stemPos;
+        if (level.getBlockEntity(pos) instanceof BerryBushBlockEntity bush) {
+            stemPos = bush.getStemPos();
+        } else {
+            stemPos = pos;
+        }
+
+        final int hydration = getHydrationFromStem(level, stemPos);
+        text.accept(FarmlandBlock.getHydrationTooltip(range, false, hydration));
+        text.accept(FarmlandBlock.getAverageTemperatureTooltip(level, stemPos, range, false));
+    }
+
     // -------------------------------------------------------- Lifecycle update
     // Overrides to use per-plant tea regrowth delay (JSDConfig.TEA_FRUIT_REGROWTH_DAYS)
     // instead of TFC's global fruitPickBloomDelayTicks config.
+    // Also uses stem → root soil traversal for hydration.
 
     @Override
     public void onUpdate(Level level, BlockPos pos, BlockState state) {
@@ -59,7 +110,7 @@ public class JSDTeaLeavesBlock extends FruitTreeLeavesBlock {
             if (!checkAndSetDormant(level, pos, state, currentLifecycle, expectedLifecycle)) {
                 final ClimateRange range = climateRange.get();
                 final BlockPos stemPos = plant.getStemPos();
-                final int hydration = getFruitBushHydrationFromRootPos(level, stemPos.below());
+                final int hydration = getHydrationFromStem(level, stemPos);
 
                 if (range.checkBoth(hydration, Climate.getAverageTemperature(level, stemPos), false)) {
                     currentLifecycle = currentLifecycle.advanceTowards(expectedLifecycle);
