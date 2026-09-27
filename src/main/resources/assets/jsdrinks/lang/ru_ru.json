@@ -58,6 +58,7 @@
   "fluid.jsdrinks.puerh_tea": "Пуэр",
   "fluid.jsdrinks.strong_puerh_tea": "Крепкий пуэр",
   "jsdrinks.tooltip.tea_bush.years_without_harvest": "Лет без сбора: %s / %s (до чайного дерева)",
+  "jsdrinks.tooltip.tea_bush.tree_transform_hint": "Без сбора урожая вырастает в чайное дерево за %s года(лет)",
   "item.jsdrinks.plant/tea_leaves": "Листва чайного дерева",
   "item.jsdrinks.plant/coffee_leaves": "Листва кофейного дерева"
 }
