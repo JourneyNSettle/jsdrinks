@@ -38,6 +38,10 @@ public class TeaBushFeature extends Feature<NoneFeatureConfiguration> {
         BlockPos pos = context.origin();
         BlockPos abovePos = pos.above();
 
+        if (pos.getY() >= level.getMaxBuildHeight() - 1) {
+            return false;
+        }
+
         // Mountain gradient: interpolate spawn chance based on Y.
         float chance = Mth.clampedLerp(MIN_CHANCE, MAX_CHANCE,
                 (float) (pos.getY() - SEA_LEVEL) / (MAX_ALTITUDE - SEA_LEVEL));
@@ -49,7 +53,7 @@ public class TeaBushFeature extends Feature<NoneFeatureConfiguration> {
             return false;
         }
 
-        if (!EnvironmentHelpers.isWorldgenReplaceable(level, pos) || !EnvironmentHelpers.isWorldgenReplaceable(level, abovePos)) {
+        if (!isDryReplaceable(level, pos) || !isDryReplaceable(level, abovePos)) {
             return false;
         }
 
@@ -75,5 +79,9 @@ public class TeaBushFeature extends Feature<NoneFeatureConfiguration> {
         }
 
         return true;
+    }
+
+    private static boolean isDryReplaceable(WorldGenLevel level, BlockPos pos) {
+        return level.getFluidState(pos).isEmpty() && EnvironmentHelpers.isWorldgenReplaceable(level, pos);
     }
 }

@@ -45,8 +45,12 @@ public class LargeTeaTreeFeature extends Feature<NoneFeatureConfiguration> {
 
         int trunkHeight = 3 + rand.nextInt(2); // 3-4 blocks trunk
 
+        if (pos.getY() + trunkHeight + 5 >= level.getMaxBuildHeight()) {
+            return false;
+        }
+
         for (int y = 0; y < trunkHeight + 3; y++) {
-            if (!EnvironmentHelpers.isWorldgenReplaceable(level, pos.above(y))) {
+            if (!isDryReplaceable(level, pos.above(y))) {
                 return false;
             }
         }
@@ -68,10 +72,10 @@ public class LargeTeaTreeFeature extends Feature<NoneFeatureConfiguration> {
 
         // 2. Crown vertical extension
         BlockPos crown1 = pos.above(trunkHeight);
-        if (EnvironmentHelpers.isWorldgenReplaceable(level, crown1)) {
+        if (isDryReplaceable(level, crown1)) {
             branchPositions.add(crown1);
             BlockPos crown2 = crown1.above();
-            if (EnvironmentHelpers.isWorldgenReplaceable(level, crown2)) {
+            if (isDryReplaceable(level, crown2)) {
                 branchPositions.add(crown2);
             }
         }
@@ -82,14 +86,28 @@ public class LargeTeaTreeFeature extends Feature<NoneFeatureConfiguration> {
             int branchLen = 2 + rand.nextInt(2); // 2-3 blocks outward
             BlockPos cur = topTrunkPos;
             for (int step = 1; step <= branchLen; step++) {
-                cur = cur.relative(dir);
+                BlockPos next = cur.relative(dir);
                 if (step == 2 && rand.nextBoolean()) {
-                    cur = cur.above();
-                }
-                if (EnvironmentHelpers.isWorldgenReplaceable(level, cur)) {
-                    branchPositions.add(cur);
+                    // Ascend: place horizontal connector first, then rise vertically to prevent diagonal disconnect
+                    if (isDryReplaceable(level, next)) {
+                        branchPositions.add(next);
+                        BlockPos risen = next.above();
+                        if (isDryReplaceable(level, risen)) {
+                            branchPositions.add(risen);
+                            cur = risen;
+                        } else {
+                            cur = next;
+                        }
+                    } else {
+                        break;
+                    }
                 } else {
-                    break;
+                    if (isDryReplaceable(level, next)) {
+                        branchPositions.add(next);
+                        cur = next;
+                    } else {
+                        break;
+                    }
                 }
             }
         }
@@ -100,7 +118,7 @@ public class LargeTeaTreeFeature extends Feature<NoneFeatureConfiguration> {
             for (Direction dir : Direction.Plane.HORIZONTAL) {
                 if (rand.nextBoolean()) {
                     BlockPos cur = midTrunkPos.relative(dir);
-                    if (EnvironmentHelpers.isWorldgenReplaceable(level, cur)) {
+                    if (isDryReplaceable(level, cur)) {
                         branchPositions.add(cur);
                     }
                 }
@@ -119,8 +137,13 @@ public class LargeTeaTreeFeature extends Feature<NoneFeatureConfiguration> {
 
         // Pass 3: Place leaves strictly around existing branch blocks
         BlockState leafState = leavesBlock.defaultBlockState().setValue(JSDTeaLeavesBlock.LIFECYCLE, lifecycle);
+        Set<BlockPos> placedLeaves = new HashSet<>();
 
         for (BlockPos bPos : branchPositions) {
+            // Keep the ground-level trunk base clean of leaves
+            if (bPos.equals(pos)) {
+                continue;
+            }
             for (Direction d : Direction.values()) {
                 if (d == Direction.DOWN) {
                     // Only hang leaves below branch if high enough above ground
@@ -129,8 +152,9 @@ public class LargeTeaTreeFeature extends Feature<NoneFeatureConfiguration> {
                     }
                 }
                 BlockPos leafPos = bPos.relative(d);
-                if (!branchPositions.contains(leafPos) && EnvironmentHelpers.isWorldgenReplaceable(level, leafPos)) {
+                if (!branchPositions.contains(leafPos) && !placedLeaves.contains(leafPos) && isDryReplaceable(level, leafPos)) {
                     setBlock(level, leafPos, leafState);
+                    placedLeaves.add(leafPos);
                     if (level.getBlockEntity(leafPos) instanceof JSDBerryBushBlockEntity be) {
                         be.setStemPos(stemPos);
                         be.resetCounter();
@@ -140,5 +164,9 @@ public class LargeTeaTreeFeature extends Feature<NoneFeatureConfiguration> {
         }
 
         return true;
+    }
+
+    private static boolean isDryReplaceable(WorldGenLevel level, BlockPos pos) {
+        return level.getFluidState(pos).isEmpty() && EnvironmentHelpers.isWorldgenReplaceable(level, pos);
     }
 }

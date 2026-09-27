@@ -2,9 +2,9 @@
   "feature": "jsdrinks:plant/tea_bush",
   "placement": [
     {
-      "type": "block_predicate_filter",
+      "type": "minecraft:block_predicate_filter",
       "predicate": {
-        "type": "tfc:replaceable"
+        "type": "tfc:dry_replaceable"
       }
     }
   ]

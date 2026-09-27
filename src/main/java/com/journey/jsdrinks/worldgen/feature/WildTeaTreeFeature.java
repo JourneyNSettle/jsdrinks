@@ -46,8 +46,12 @@ public class WildTeaTreeFeature extends Feature<NoneFeatureConfiguration> {
 
         int trunkHeight = 2 + rand.nextInt(2); // 2-3 blocks trunk
 
+        if (pos.getY() + trunkHeight + 3 >= level.getMaxBuildHeight()) {
+            return false;
+        }
+
         for (int y = 0; y < trunkHeight + 2; y++) {
-            if (!EnvironmentHelpers.isWorldgenReplaceable(level, pos.above(y))) {
+            if (!isDryReplaceable(level, pos.above(y))) {
                 return false;
             }
         }
@@ -69,7 +73,7 @@ public class WildTeaTreeFeature extends Feature<NoneFeatureConfiguration> {
 
         // 2. Crown branch
         BlockPos crownPos = pos.above(trunkHeight);
-        if (EnvironmentHelpers.isWorldgenReplaceable(level, crownPos)) {
+        if (isDryReplaceable(level, crownPos)) {
             branchPositions.add(crownPos);
         }
 
@@ -80,7 +84,7 @@ public class WildTeaTreeFeature extends Feature<NoneFeatureConfiguration> {
             BlockPos cur = topTrunkPos;
             for (int step = 1; step <= branchLen; step++) {
                 cur = cur.relative(dir);
-                if (EnvironmentHelpers.isWorldgenReplaceable(level, cur)) {
+                if (isDryReplaceable(level, cur)) {
                     branchPositions.add(cur);
                 } else {
                     break;
@@ -100,8 +104,13 @@ public class WildTeaTreeFeature extends Feature<NoneFeatureConfiguration> {
 
         // Pass 3: Place leaves strictly around existing branch blocks
         BlockState leafState = leavesBlock.defaultBlockState().setValue(JSDTeaLeavesBlock.LIFECYCLE, lifecycle);
+        Set<BlockPos> placedLeaves = new HashSet<>();
 
         for (BlockPos bPos : branchPositions) {
+            // Keep the ground-level trunk base clean of leaves
+            if (bPos.equals(pos)) {
+                continue;
+            }
             for (Direction d : Direction.values()) {
                 if (d == Direction.DOWN) {
                     // Only hang leaves below branch if high enough above ground
@@ -110,8 +119,9 @@ public class WildTeaTreeFeature extends Feature<NoneFeatureConfiguration> {
                     }
                 }
                 BlockPos leafPos = bPos.relative(d);
-                if (!branchPositions.contains(leafPos) && EnvironmentHelpers.isWorldgenReplaceable(level, leafPos)) {
+                if (!branchPositions.contains(leafPos) && !placedLeaves.contains(leafPos) && isDryReplaceable(level, leafPos)) {
                     setBlock(level, leafPos, leafState);
+                    placedLeaves.add(leafPos);
                     if (level.getBlockEntity(leafPos) instanceof JSDBerryBushBlockEntity be) {
                         be.setStemPos(stemPos);
                         be.resetCounter();
@@ -121,5 +131,9 @@ public class WildTeaTreeFeature extends Feature<NoneFeatureConfiguration> {
         }
 
         return true;
+    }
+
+    private static boolean isDryReplaceable(WorldGenLevel level, BlockPos pos) {
+        return level.getFluidState(pos).isEmpty() && EnvironmentHelpers.isWorldgenReplaceable(level, pos);
     }
 }
