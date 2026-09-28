@@ -15,7 +15,6 @@
   "item.jsdrinks.roasted_coffee_bean": "Обжаренное кофейное зерно",
   "item.jsdrinks.roasted_coffee_beans": "Обжаренное кофейное зерно",
   "item.jsdrinks.ground_coffee": "Молотый кофе",
-  "item.jsdrinks.manual_mill": "Ручная мельница",
   "item.jsdrinks.fresh_tea_leaf": "Свежий чайный лист",
   "item.jsdrinks.white_tea_leaf": "Белый чайный лист",
   "item.jsdrinks.dried_white_tea": "Белый чайный лист",
@@ -57,8 +56,9 @@
   "fluid.jsdrinks.red_tea": "Красный чай",
   "fluid.jsdrinks.puerh_tea": "Пуэр",
   "fluid.jsdrinks.strong_puerh_tea": "Крепкий пуэр",
-  "jsdrinks.tooltip.tea_bush.years_without_harvest": "Лет без сбора: %s / %s (до чайного дерева)",
-  "jsdrinks.tooltip.tea_bush.tree_transform_hint": "Без сбора урожая вырастает в чайное дерево за %s года(лет)",
+  "jsdrinks.tooltip.tea_bush.years_without_harvest": "Месяцев без сбора: %s / %s",
+  "jsdrinks.tooltip.tea_bush.months_without_harvest": "Месяцев без сбора: %s / %s",
+  "jsdrinks.tooltip.tea_bush.tree_transform_hint": "Превращается в дерево через %s месяцев без сбора",
   "item.jsdrinks.plant/tea_leaves": "Листва чайного дерева",
   "item.jsdrinks.plant/coffee_leaves": "Листва кофейного дерева"
 }

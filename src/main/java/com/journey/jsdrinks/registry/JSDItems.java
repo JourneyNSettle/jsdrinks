@@ -21,7 +21,6 @@ public class JSDItems {
     public static final DeferredHolder<Item, Item> DRIED_COFFEE_BEAN = register("dried_coffee_bean");
     public static final DeferredHolder<Item, Item> ROASTED_COFFEE_BEAN = register("roasted_coffee_bean");
     public static final DeferredHolder<Item, Item> GROUND_COFFEE = register("ground_coffee");
-    public static final DeferredHolder<Item, Item> MANUAL_MILL = register("manual_mill", () -> new Item(new Item.Properties().durability(128)));
 
     // Tea chain
     public static final DeferredHolder<Item, Item> FRESH_TEA_LEAF = register("fresh_tea_leaf");

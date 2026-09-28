@@ -15,7 +15,6 @@
   "item.jsdrinks.roasted_coffee_bean": "Roasted Coffee Bean",
   "item.jsdrinks.roasted_coffee_beans": "Roasted Coffee Bean",
   "item.jsdrinks.ground_coffee": "Ground Coffee",
-  "item.jsdrinks.manual_mill": "Manual Mill",
   "item.jsdrinks.fresh_tea_leaf": "Fresh Tea Leaf",
   "item.jsdrinks.white_tea_leaf": "White Tea Leaf",
   "item.jsdrinks.dried_white_tea": "White Tea Leaf",
@@ -58,8 +57,9 @@
   "fluid.jsdrinks.red_tea": "Red Tea",
   "fluid.jsdrinks.puerh_tea": "Pu-erh Tea",
   "fluid.jsdrinks.strong_puerh_tea": "Strong Pu-erh Tea",
-  "jsdrinks.tooltip.tea_bush.years_without_harvest": "Years without harvest: %s / %s (until tree)",
-  "jsdrinks.tooltip.tea_bush.tree_transform_hint": "Without harvest, grows into a tea tree in %s years",
+  "jsdrinks.tooltip.tea_bush.years_without_harvest": "Months without harvest: %s / %s",
+  "jsdrinks.tooltip.tea_bush.months_without_harvest": "Months without harvest: %s / %s",
+  "jsdrinks.tooltip.tea_bush.tree_transform_hint": "Transforms into a tree after %s months without harvest",
   "item.jsdrinks.plant/tea_leaves": "Tea Tree Leaves",
   "item.jsdrinks.plant/coffee_leaves": "Coffee Tree Leaves"
 }

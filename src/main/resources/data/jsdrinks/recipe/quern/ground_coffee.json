@@ -1,0 +1,28 @@
+{
+  "type": "tfc:quern",
+  "ingredient": {
+    "type": "tfc:and",
+    "children": [
+      {
+        "item": "jsdrinks:roasted_coffee_bean"
+      },
+      {
+        "type": "tfc:not_rotten"
+      }
+    ]
+  },
+  "result": {
+    "modifiers": [
+      {
+        "type": "tfc:copy_food"
+      },
+      {
+        "type": "jsdrinks:copy_components"
+      }
+    ],
+    "stack": {
+      "count": 1,
+      "id": "jsdrinks:ground_coffee"
+    }
+  }
+}

@@ -46,8 +46,8 @@ public class TeaBushItem extends BlockItem implements PlantableInfo {
 
     @Override
     public int getGrowthTimeInfo() {
-        int years = JSDConfig.TEA_BUSH_TRANSFORM_YEARS.get();
-        return (int) ((long) years * Calendars.get().getCalendarDaysInMonth() * ICalendar.MONTHS_IN_YEAR * ICalendar.CALENDAR_TICKS_IN_DAY);
+        int months = JSDConfig.TEA_BUSH_TRANSFORM_YEARS.get() * ICalendar.MONTHS_IN_YEAR;
+        return (int) ((long) months * Calendars.get().getCalendarDaysInMonth() * ICalendar.CALENDAR_TICKS_IN_DAY);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class TeaBushItem extends BlockItem implements PlantableInfo {
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, context, tooltip, flag);
-        int years = JSDConfig.TEA_BUSH_TRANSFORM_YEARS.get();
-        tooltip.add(Component.translatable("jsdrinks.tooltip.tea_bush.tree_transform_hint", years).withStyle(ChatFormatting.DARK_GREEN));
+        int months = JSDConfig.TEA_BUSH_TRANSFORM_YEARS.get() * ICalendar.MONTHS_IN_YEAR;
+        tooltip.add(Component.translatable("jsdrinks.tooltip.tea_bush.tree_transform_hint", months).withStyle(ChatFormatting.DARK_GREEN));
     }
 }

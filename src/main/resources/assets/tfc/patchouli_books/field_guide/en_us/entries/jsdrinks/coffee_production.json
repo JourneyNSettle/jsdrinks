@@ -9,11 +9,11 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(thing)Production Chain$():$(br)$(li)Dry coffee cherries on a $(l:firmalife/drying)Drying Mat$()$(li)Craft dried cherries with a $(thing)Knife$() to extract raw beans$(li)Dry raw beans on a drying mat$(li)Heat dried beans carefully to roast them — listen for the crackle!$(li)Grind roasted beans with a $(thing)Manual Mill$()"
+      "text": "$(thing)Production Chain$():$(br)$(li)Dry coffee cherries on a $(l:firmalife/drying)Drying Mat$()$(li)Craft dried cherries with a $(thing)Knife$() to extract raw beans$(li)Dry raw beans on a drying mat$(li)Heat dried beans carefully to roast them — listen for the crackle!$(li)Grind roasted beans in a $(l:crafting/quern)Quern$()"
     },
     {
       "type": "patchouli:text",
-      "text": "$(bold)Roasting Tips$(): The beans go through two stages of heating. The first stage (around 200°C) roasts them properly. If heated further (past 400°C), they burn! A careful touch is needed.$(br2)The $(thing)Manual Mill$() is crafted from a stick, a raw stone, and lumber."
+      "text": "$(bold)Roasting Tips$(): The beans go through two stages of heating. The first stage (around 200°C) roasts them properly. If heated further (past 400°C), they burn! A careful touch is needed.$(br2)Grinding roasted beans requires a $(l:crafting/quern)Quern$() with a handstone."
     },
     {
       "type": "patchouli:text",

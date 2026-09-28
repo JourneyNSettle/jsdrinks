@@ -137,9 +137,9 @@ public class TeaBushBlock extends SeasonalPlantBlock implements HoeOverlayBlock 
         }
 
         if (level.getBlockEntity(lowerPos) instanceof TeaBushBlockEntity bush) {
-            int years = bush.getSeasonsWithoutHarvest();
-            int maxYears = JSDConfig.TEA_BUSH_TRANSFORM_YEARS.get();
-            text.accept(Component.translatable("jsdrinks.tooltip.tea_bush.years_without_harvest", years, maxYears));
+            int months = bush.getSeasonsWithoutHarvest() * ICalendar.MONTHS_IN_YEAR;
+            int maxMonths = JSDConfig.TEA_BUSH_TRANSFORM_YEARS.get() * ICalendar.MONTHS_IN_YEAR;
+            text.accept(Component.translatable("jsdrinks.tooltip.tea_bush.months_without_harvest", months, maxMonths));
         }
     }
 
