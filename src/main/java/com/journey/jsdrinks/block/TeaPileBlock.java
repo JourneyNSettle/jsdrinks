@@ -75,7 +75,7 @@ public class TeaPileBlock extends Block implements EntityBlock {
             if (level.getBlockEntity(pos) instanceof TeaPileBlockEntity pileBE) {
                 int stage = state.getValue(STAGE);
                 if (stage == 3) {
-                    level.playSound(null, pos, SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, 1.0f, 0.8f);
+                    level.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.PLAYERS, 1.0f, 0.8f);
                 } else {
                     ItemStack drop = pileBE.getStoredItem();
                     if (!drop.isEmpty()) {

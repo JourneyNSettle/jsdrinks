@@ -96,6 +96,10 @@ public class JSDItemStackModifiers {
         @Override
         public ItemStack apply(ItemStack stack, ItemStack input, Context context) {
             stack.set(JSDDataComponents.BURNT.get(), true);
+            final Player player = RecipeHelpers.getCraftingPlayer();
+            if (player != null && !player.level().isClientSide) {
+                player.level().playSound(null, player.blockPosition(), SoundEvents.FIRECHARGE_USE, SoundSource.PLAYERS, 0.7f, 1.5f);
+            }
             return stack;
         }
 

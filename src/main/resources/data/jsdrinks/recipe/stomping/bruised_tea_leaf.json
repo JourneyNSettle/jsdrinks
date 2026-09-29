@@ -6,8 +6,15 @@
   "input_texture": "jsdrinks:block/fresh_tea_leaves_mat",
   "output_texture": "jsdrinks:block/bruised_tea_leaves_mat",
   "result": {
-    "id": "jsdrinks:bruised_tea_leaf",
-    "count": 1
+    "modifiers": [
+      {
+        "type": "jsdrinks:copy_components"
+      }
+    ],
+    "stack": {
+      "id": "jsdrinks:bruised_tea_leaf",
+      "count": 1
+    }
   },
   "sound": "minecraft:entity.slime.squish"
 }

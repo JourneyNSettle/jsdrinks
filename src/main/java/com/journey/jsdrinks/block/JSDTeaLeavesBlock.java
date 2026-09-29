@@ -174,17 +174,15 @@ public class JSDTeaLeavesBlock extends FruitTreeLeavesBlock {
         if (state.getValue(LIFECYCLE) == Lifecycle.FRUITING) {
             level.playSound(player, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.PLAYERS, 1.0f, level.getRandom().nextFloat() * 0.2f + 0.9f);
             if (!level.isClientSide()) {
-                boolean isKnife = stack.is(TFCTags.Items.TOOLS_KNIFE);
+                boolean isKnife = stack.is(TFCTags.Items.TOOLS_KNIFE) || stack.is(TeaBushBlock.KNIVES_C_TAG);
                 if (isKnife) {
                     // Нож: больше листа (2-3 шт.), расход 1 прочности, без тегов
                     stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
                     ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(JSDItems.FRESH_TEA_LEAF.get(), 2 + level.random.nextInt(2)));
                 } else {
-                    // Рука: меньше листа (1-2 шт.), шанс тега LARGE_LEAF для пуэра (ТЗ R08/R10)
+                    // Рука: меньше листа (1-2 шт.), тег LARGE_LEAF для пуэра (ТЗ §4)
                     ItemStack drop = new ItemStack(JSDItems.FRESH_TEA_LEAF.get(), 1 + (level.random.nextFloat() < 0.35f ? 1 : 0));
-                    if (level.random.nextFloat() < 0.40f) {
-                        drop.set(JSDDataComponents.LARGE_LEAF.get(), true);
-                    }
+                    drop.set(JSDDataComponents.LARGE_LEAF.get(), true);
                     ItemHandlerHelper.giveItemToPlayer(player, drop);
                 }
             }

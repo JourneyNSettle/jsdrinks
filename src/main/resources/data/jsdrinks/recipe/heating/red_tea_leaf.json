@@ -5,6 +5,11 @@
   },
   "temperature": 200.0,
   "result_item": {
+    "modifiers": [
+      {
+        "type": "jsdrinks:copy_components"
+      }
+    ],
     "stack": {
       "id": "jsdrinks:red_tea_leaf",
       "count": 1

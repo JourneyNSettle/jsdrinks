@@ -2,6 +2,7 @@ package com.journey.jsdrinks.event;
 
 import static com.journey.jsdrinks.JourneyDrinks.MOD_ID;
 
+import com.journey.jsdrinks.registry.JSDDataComponents;
 import com.journey.jsdrinks.registry.JSDFluids;
 import com.journey.jsdrinks.registry.JSDItems;
 import net.minecraft.core.BlockPos;
@@ -55,8 +56,8 @@ public class JSDEvents {
         if (level.getGameTime() % 60 != 0) return;
 
         BlockPos playerPos = player.blockPosition();
-        // Check 3x3x3 around player (radius 1: 27 blocks)
-        for (BlockPos pos : BlockPos.betweenClosed(playerPos.offset(-1, -1, -1), playerPos.offset(1, 1, 1))) {
+        // Check around player (radius 2: 5x4x5 blocks)
+        for (BlockPos pos : BlockPos.betweenClosed(playerPos.offset(-2, -1, -2), playerPos.offset(2, 2, 2))) {
             BlockState state = level.getBlockState(pos);
             if (state.isAir() || !state.hasBlockEntity()) continue;
 
@@ -67,12 +68,22 @@ public class JSDEvents {
             if (handler != null) {
                 for (int i = 0; i < handler.getSlots(); i++) {
                     ItemStack stack = handler.getStackInSlot(i);
-                    if (stack.is(JSDItems.DRIED_COFFEE_BEAN.get()) || stack.is(JSDItems.ROASTED_COFFEE_BEAN.get())) {
+                    if (stack.is(JSDItems.DRIED_COFFEE_BEAN.get())) {
                         IHeat heat = HeatCapability.get(stack);
                         if (heat != null && heat.getTemperature() >= 180.0f) {
-                            // Play coffee roasting crackle near player
-                            level.playSound(null, pos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 0.45f, 1.2f + level.random.nextFloat() * 0.4f);
+                            // First crackle
+                            level.playSound(null, pos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 0.45f, 1.1f + level.random.nextFloat() * 0.3f);
                             return;
+                        }
+                    } else if (stack.is(JSDItems.ROASTED_COFFEE_BEAN.get())) {
+                        // Second crackle during re-roasting / дожарка (only if not already burnt)
+                        if (!Boolean.TRUE.equals(stack.get(JSDDataComponents.BURNT.get()))) {
+                            IHeat heat = HeatCapability.get(stack);
+                            if (heat != null && heat.getTemperature() >= 320.0f) {
+                                // Second crackle (higher pitch)
+                                level.playSound(null, pos, SoundEvents.FIRECHARGE_USE, SoundSource.BLOCKS, 0.5f, 1.4f + level.random.nextFloat() * 0.3f);
+                                return;
+                            }
                         }
                     }
                 }

@@ -174,7 +174,7 @@ public class JSDCoffeeLeavesBlock extends FruitTreeLeavesBlock {
                 SoundSource.PLAYERS, 1.0f, level.getRandom().nextFloat() * 0.2f + 0.9f);
 
             if (!level.isClientSide()) {
-                boolean isKnife = stack.is(TFCTags.Items.TOOLS_KNIFE);
+                boolean isKnife = stack.is(TFCTags.Items.TOOLS_KNIFE) || stack.is(TeaBushBlock.KNIVES_C_TAG);
 
                 if (isKnife) {
                     // Knife: more cherries, no quality tag, costs durability.

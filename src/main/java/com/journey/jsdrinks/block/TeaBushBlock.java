@@ -73,7 +73,7 @@ import net.dries007.tfc.util.climate.ClimateRange;
 public class TeaBushBlock extends SeasonalPlantBlock implements HoeOverlayBlock {
 
     public static final EnumProperty<ITallPlant.Part> PART = TFCBlockStateProperties.TALL_PLANT_PART;
-    public static final TagKey<Item> KNIVES_C_TAG = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "tools/knives"));
+    public static final TagKey<Item> KNIVES_C_TAG = ItemTags.create(ResourceLocation.fromNamespaceAndPath("c", "tools/knife"));
     public static final VoxelShape LOWER_SHAPE = box(2.0, 0.0, 2.0, 14.0, 16.0, 14.0);
     public static final VoxelShape UPPER_SHAPE = box(2.0, 0.0, 2.0, 14.0, 16.0, 14.0);
 

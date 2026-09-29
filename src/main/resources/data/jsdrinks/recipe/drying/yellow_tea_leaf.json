@@ -1,7 +1,7 @@
 {
   "type": "firmalife:drying",
   "ingredient": {
-    "type": "neoforge:data_component",
+    "type": "neoforge:components",
     "items": "jsdrinks:green_tea_leaf",
     "components": {
       "jsdrinks:select": true

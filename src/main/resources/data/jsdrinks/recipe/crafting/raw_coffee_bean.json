@@ -2,14 +2,14 @@
   "type": "tfc:advanced_shapeless_crafting",
   "ingredients": [
     {
-      "tag": "c:tools/knives"
+      "tag": "c:tools/knife"
     },
     {
       "item": "jsdrinks:dried_coffee_cherries"
     }
   ],
   "primary_ingredient": {
-    "tag": "c:tools/knives"
+    "tag": "c:tools/knife"
   },
   "remainder": {
     "modifiers": [
