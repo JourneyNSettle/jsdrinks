@@ -20,7 +20,7 @@ public class JourneyDrinks {
     public static final Logger LOGGER = LoggerFactory.getLogger(JourneyDrinks.class);
 
     public JourneyDrinks(IEventBus modEventBus, ModContainer modContainer) {
-        LOGGER.info("Initializing Journey Drinks addon for TFC & Firmalife");
+        LOGGER.info("Initializing TFC Advanced Drinks addon for TFC & Firmalife");
 
         modContainer.registerConfig(ModConfig.Type.SERVER, JSDConfig.SPEC);
 
