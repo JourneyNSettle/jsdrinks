@@ -2,6 +2,8 @@ package com.journey.jsdrinks.block;
 
 import com.journey.jsdrinks.block.entity.TeaPileBlockEntity;
 import com.journey.jsdrinks.registry.JSDBlockEntities;
+import com.journey.jsdrinks.registry.JSDItems;
+import net.dries007.tfc.common.component.food.FoodCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -74,18 +76,46 @@ public class TeaPileBlock extends Block implements EntityBlock {
         if (!level.isClientSide()) {
             if (level.getBlockEntity(pos) instanceof TeaPileBlockEntity pileBE) {
                 int stage = state.getValue(STAGE);
+                ItemStack drop;
                 if (stage == 3) {
+                    drop = pileBE.getStoredItem();
+                    if (drop.isEmpty()) {
+                        drop = new ItemStack(JSDItems.FERMENTED_TEA_LEAF.get());
+                    }
+                    FoodCapability.setRotten(drop);
+                    ItemHandlerHelper.giveItemToPlayer(player, drop);
                     level.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.PLAYERS, 1.0f, 0.8f);
                 } else {
-                    ItemStack drop = pileBE.getStoredItem();
+                    drop = pileBE.getStoredItem();
                     if (!drop.isEmpty()) {
+                        if (FoodCapability.isRotten(drop)) {
+                            FoodCapability.setRotten(drop);
+                        }
                         ItemHandlerHelper.giveItemToPlayer(player, drop);
                     }
                     level.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.PLAYERS, 1.0f, 1.0f);
                 }
+                pileBE.setStoredItem(ItemStack.EMPTY);
             }
             level.removeBlock(pos, false);
         }
         return ItemInteractionResult.sidedSuccess(level.isClientSide());
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!state.is(newState.getBlock()) && !level.isClientSide()) {
+            if (level.getBlockEntity(pos) instanceof TeaPileBlockEntity pileBE) {
+                ItemStack drop = pileBE.getStoredItem();
+                if (!drop.isEmpty()) {
+                    if (state.getValue(STAGE) == 3 || FoodCapability.isRotten(drop)) {
+                        FoodCapability.setRotten(drop);
+                    }
+                    popResource(level, pos, drop);
+                    pileBE.setStoredItem(ItemStack.EMPTY);
+                }
+            }
+        }
+        super.onRemove(state, level, pos, newState, isMoving);
     }
 }

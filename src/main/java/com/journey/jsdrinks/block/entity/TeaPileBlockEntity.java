@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blockentities.TFCBlockEntity;
+import net.dries007.tfc.common.component.food.FoodCapability;
 import net.dries007.tfc.util.calendar.Calendars;
 import net.dries007.tfc.util.calendar.ICalendar;
 
@@ -81,7 +82,9 @@ public class TeaPileBlockEntity extends TFCBlockEntity {
                 if (!hasLargeLeaf) {
                     // Without large leaf: rots (TZ 6.5)
                     state = state.setValue(TeaPileBlock.STAGE, 3);
-                    pile.storedItem = ItemStack.EMPTY;
+                    ItemStack rotten = new ItemStack(JSDItems.FERMENTED_TEA_LEAF.get());
+                    FoodCapability.setRotten(rotten);
+                    pile.storedItem = rotten;
                 } else {
                     BlockState belowState = level.getBlockState(pos.below());
                     boolean onSoil = belowState.is(BlockTags.DIRT) || belowState.is(TFCTags.Blocks.DIRT) || belowState.is(TFCTags.Blocks.GRASS);
@@ -90,24 +93,34 @@ public class TeaPileBlockEntity extends TFCBlockEntity {
                         // On soil: higher chance of strong pu-erh AND rot (TZ 6.5)
                         float roll = level.random.nextFloat();
                         if (roll < 0.50f) {
-                            pile.storedItem = new ItemStack(JSDItems.STRONG_PUERH_TEA.get());
+                            ItemStack puerh = new ItemStack(JSDItems.STRONG_PUERH_TEA.get());
+                            FoodCapability.setCreatedNow(puerh);
+                            pile.storedItem = puerh;
                             state = state.setValue(TeaPileBlock.STAGE, 2);
                         } else if (roll < 0.75f) {
-                            pile.storedItem = new ItemStack(JSDItems.PUERH_TEA.get());
+                            ItemStack puerh = new ItemStack(JSDItems.PUERH_TEA.get());
+                            FoodCapability.setCreatedNow(puerh);
+                            pile.storedItem = puerh;
                             state = state.setValue(TeaPileBlock.STAGE, 2);
                         } else {
                             state = state.setValue(TeaPileBlock.STAGE, 3); // Spoilage
-                            pile.storedItem = ItemStack.EMPTY;
+                            ItemStack rotten = new ItemStack(JSDItems.FERMENTED_TEA_LEAF.get());
+                            FoodCapability.setRotten(rotten);
+                            pile.storedItem = rotten;
                         }
                     } else {
                         // Not on soil: pu-erh with lower spoilage chance, no strong pu-erh
                         float roll = level.random.nextFloat();
                         if (roll < 0.85f) {
-                            pile.storedItem = new ItemStack(JSDItems.PUERH_TEA.get());
+                            ItemStack puerh = new ItemStack(JSDItems.PUERH_TEA.get());
+                            FoodCapability.setCreatedNow(puerh);
+                            pile.storedItem = puerh;
                             state = state.setValue(TeaPileBlock.STAGE, 2);
                         } else {
                             state = state.setValue(TeaPileBlock.STAGE, 3); // Spoilage
-                            pile.storedItem = ItemStack.EMPTY;
+                            ItemStack rotten = new ItemStack(JSDItems.FERMENTED_TEA_LEAF.get());
+                            FoodCapability.setRotten(rotten);
+                            pile.storedItem = rotten;
                         }
                     }
                 }

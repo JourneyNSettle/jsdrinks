@@ -57,6 +57,14 @@ public class TeaBushBlockEntity extends BerryBushBlockEntity {
                 bushBlock.onUpdate(level, pos, state);
                 state = level.getBlockState(pos);
                 if (!state.is(bushBlock)) return;
+
+                // Synchronize UPPER half lifecycle with LOWER half
+                BlockPos upperPos = pos.above();
+                BlockState upperState = level.getBlockState(upperPos);
+                if (upperState.is(bushBlock) && upperState.hasProperty(TeaBushBlock.LIFECYCLE)
+                        && upperState.getValue(TeaBushBlock.LIFECYCLE) != state.getValue(TeaBushBlock.LIFECYCLE)) {
+                    level.setBlockAndUpdate(upperPos, upperState.setValue(TeaBushBlock.LIFECYCLE, state.getValue(TeaBushBlock.LIFECYCLE)));
+                }
             }
 
             Lifecycle lifecycle = state.hasProperty(TeaBushBlock.LIFECYCLE) ? state.getValue(TeaBushBlock.LIFECYCLE) : Lifecycle.HEALTHY;

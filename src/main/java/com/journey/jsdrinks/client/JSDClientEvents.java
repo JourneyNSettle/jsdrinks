@@ -35,7 +35,7 @@ public class JSDClientEvents {
         registerFluid(event, JSDFluids.STRONG_COFFEE_WITH_MILK, 0xFF6A4D34);
 
         // Tea fluids
-        registerFluid(event, JSDFluids.WHITE_TEA, 0xFFEBDCB9);
+        registerFluid(event, JSDFluids.WHITE_TEA, 0xFFEBCD58);
         registerFluid(event, JSDFluids.GREEN_TEA, 0xFF6E8B3D);
         registerFluid(event, JSDFluids.YELLOW_TEA, 0xFFD4AF37);
         registerFluid(event, JSDFluids.RED_TEA, 0xFF8A3324);

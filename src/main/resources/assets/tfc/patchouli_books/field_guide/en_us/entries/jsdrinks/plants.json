@@ -5,15 +5,29 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "$(thing)Tea Saplings$() can be planted in the ground to grow a $(thing)Tea Bush$() — a two-block-tall seasonal plant. The bush goes through lifecycle stages (dormant, healthy, flowering, fruiting) based on climate and season. Right-click a fruiting bush to harvest fresh tea leaves."
+      "title": "Tea Plants",
+      "text": "$(bold)Where it grows:$() Warm and humid climates.$(br)$(bold)Temperature:$() 10°C to 26°C$(br)$(bold)Rainfall:$() 250 - 950 mm$(br2)$(bold)Seasonality:$() Flowers in April, bears leaves in May–June and August–September. Dormant in winter.$(br2)$(thing)Tea Bush & Tree:$() Planting a sapling in soil grows a 2-block-tall $(thing)Tea Bush$(). If left unharvested for 2 full years, it transforms into a $(thing)Tea Tree$(). In a greenhouse bonsai planter, it grows as a tree directly."
+    },
+    {
+      "type": "patchouli:image",
+      "images": [
+        "jsdrinks:textures/gui/book/tea_plants.png"
+      ],
+      "text": "A mature Tea Tree (left) and two-block Tea Bush (right).",
+      "border": true
     },
     {
       "type": "patchouli:text",
-      "text": "If a tea bush is left unharvested for 2 years, it transforms irreversibly into a $(thing)Tea Tree$() — a full fruit tree with branches and leaves. Trees yield more leaves but cannot be reverted to bushes.$(br2)Tea saplings can also be placed in a $(l:firmalife/planters)Bonsai Planter$() in a greenhouse, where they grow as a tree directly."
+      "title": "Coffee Trees",
+      "text": "$(bold)Where it grows:$() Tropical climates.$(br)$(bold)Temperature:$() 16°C to 36°C$(br)$(bold)Rainfall:$() 200 - 900 mm$(br2)$(bold)Seasonality:$() Flowers in May–June, fruiting in September–October. Dormant in winter.$(br2)$(thing)Growth Rules:$() Coffee grows only as a fruit tree. In the wild, it requires 2 full years of growth before first fruiting (from year 3). In a greenhouse $(l:firmalife/planters)Bonsai Planter$(), coffee fruits immediately without waiting!"
     },
     {
-      "type": "patchouli:text",
-      "text": "$(thing)Coffee Trees$() grow exclusively as fruit trees. Wild coffee trees in the world must grow for 2 years before first fruiting. In a bonsai planter, they fruit immediately.$(br2)Coffee cherries can be eaten as a small fruit snack, but their real value is in processing them into coffee."
+      "type": "patchouli:image",
+      "images": [
+        "jsdrinks:textures/gui/book/coffee_tree.png"
+      ],
+      "text": "A fruiting Coffee Tree with ripe cherries.",
+      "border": true
     }
   ],
   "read_by_default": true,

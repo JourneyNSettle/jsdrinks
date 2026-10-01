@@ -1,7 +1,7 @@
 {
   "name": "Tea Production",
   "category": "tfc:jsdrinks",
-  "icon": "jsdrinks:fresh_tea_leaf",
+  "icon": "jsdrinks:green_tea_leaf",
   "pages": [
     {
       "type": "patchouli:text",

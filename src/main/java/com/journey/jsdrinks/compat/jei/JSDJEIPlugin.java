@@ -27,10 +27,22 @@ public class JSDJEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        registration.addItemStackInfo(new ItemStack(JSDItems.BRUISED_TEA_LEAF.get()), Component.translatable("jsdrinks.jei.info.bruised_tea_leaf"));
-        registration.addItemStackInfo(new ItemStack(JSDItems.FERMENTED_TEA_LEAF.get()), Component.translatable("jsdrinks.jei.info.fermented_tea_leaf"));
-        registration.addItemStackInfo(new ItemStack(JSDItems.PUERH_TEA.get()), Component.translatable("jsdrinks.jei.info.puerh_tea"));
-        registration.addItemStackInfo(new ItemStack(JSDItems.STRONG_PUERH_TEA.get()), Component.translatable("jsdrinks.jei.info.strong_puerh_tea"));
+        registration.addItemStackInfo(
+            List.of(
+                new ItemStack(JSDItems.BRUISED_TEA_LEAF.get()),
+                new ItemStack(JSDItems.FERMENTED_TEA_LEAF.get())
+            ),
+            Component.translatable("jsdrinks.jei.info.bruised_tea_leaf")
+        );
+        registration.addItemStackInfo(
+            List.of(
+                new ItemStack(JSDItems.FERMENTED_TEA_LEAF.get()),
+                new ItemStack(JSDItems.RED_TEA_LEAF.get()),
+                new ItemStack(JSDItems.PUERH_TEA.get()),
+                new ItemStack(JSDItems.STRONG_PUERH_TEA.get())
+            ),
+            Component.translatable("jsdrinks.jei.info.fermented_tea_leaf")
+        );
         registration.addItemStackInfo(new ItemStack(JSDItems.YELLOW_TEA_LEAF.get()), Component.translatable("jsdrinks.jei.info.yellow_tea_leaf"));
     }
 

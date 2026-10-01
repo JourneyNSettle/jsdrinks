@@ -1,7 +1,7 @@
 {
   "name": "Coffee Production",
   "category": "tfc:jsdrinks",
-  "icon": "jsdrinks:ground_coffee",
+  "icon": "jsdrinks:coffee_cherries",
   "pages": [
     {
       "type": "patchouli:text",
