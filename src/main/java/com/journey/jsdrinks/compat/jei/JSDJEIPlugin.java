@@ -7,6 +7,8 @@ import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.recipe.IRecipeManager;
 import mezz.jei.api.recipe.RecipeType;
+import mezz.jei.api.registration.IRecipeCatalystRegistration;
+import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
 import net.dries007.tfc.common.recipes.HeatingRecipe;
@@ -26,7 +28,20 @@ public class JSDJEIPlugin implements IModPlugin {
     }
 
     @Override
+    public void registerCategories(IRecipeCategoryRegistration registration) {
+        registration.addRecipeCategories(new TeaPileCategory(registration.getJeiHelpers().getGuiHelper()));
+    }
+
+    @Override
+    public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
+        registration.addRecipeCatalyst(new ItemStack(JSDItems.BRUISED_TEA_LEAF.get()), TeaPileCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(JSDItems.FERMENTED_TEA_LEAF.get()), TeaPileCategory.TYPE);
+    }
+
+    @Override
     public void registerRecipes(IRecipeRegistration registration) {
+        registration.addRecipes(TeaPileCategory.TYPE, TeaPileRecipe.getRecipes());
+
         registration.addItemStackInfo(
             List.of(
                 new ItemStack(JSDItems.BRUISED_TEA_LEAF.get()),

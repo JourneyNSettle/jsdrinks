@@ -66,5 +66,17 @@
   "jsdrinks.jei.info.fermented_tea_leaf": "Can be roasted in a firepit or oven to produce [Red Tea Leaf]. Leaving a pile of large tea leaves on the ground for 2 months will age it into [Pu-erh Tea] (safer on solid blocks) or [Strong Pu-erh Tea] (on soil with higher potency).",
   "jsdrinks.jei.info.puerh_tea": "Obtained by aging a pile of fermented large tea leaves for 2 months. Aging on solid non-soil surfaces has an 85% success rate. Aging on soil has a 25% chance of Pu-erh, 50% chance of Strong Pu-erh, and 25% chance of rotting.",
   "jsdrinks.jei.info.strong_puerh_tea": "A potent variety of Pu-erh obtained by aging a pile of fermented large tea leaves directly on soil or grass for 2 months (50% chance).",
-  "jsdrinks.jei.info.yellow_tea_leaf": "Crafted by drying select fresh tea leaves on a drying mat. Select leaves can only be obtained by harvesting tea bushes with bare hands (35% chance)."
+  "jsdrinks.jei.info.yellow_tea_leaf": "Crafted by drying select fresh tea leaves on a drying mat. Select leaves can only be obtained by harvesting tea bushes with bare hands (35% chance).",
+  "jsdrinks.jei.tea_pile": "Tea Pile",
+  "jsdrinks.jei.tea_pile.surface.any": "Surface: Any solid surface or soil",
+  "jsdrinks.jei.tea_pile.surface.solid": "Surface: Solid block (planks, stone, etc., not soil)",
+  "jsdrinks.jei.tea_pile.surface.soil": "Surface: Soil (dirt, grass, podzol)",
+  "jsdrinks.jei.tea_pile.duration.1_day": "1 day",
+  "jsdrinks.jei.tea_pile.duration.2_months": "2 months",
+  "jsdrinks.jei.tea_pile.weather": "☀ Clear",
+  "jsdrinks.jei.tea_pile.weather_info": "Requires clear weather",
+  "jsdrinks.jei.tea_pile.weather_rain_stop": "Timer pauses during rain",
+  "jsdrinks.jei.tea_pile.chance": "Chance: %s%%",
+  "jsdrinks.jei.tea_pile.chance_spoilage": "Chance: %s%% (Spoilage)",
+  "jsdrinks.jei.tea_pile.requires_large_leaf": "Requires large leaf (hand-harvested from tree)"
 }
