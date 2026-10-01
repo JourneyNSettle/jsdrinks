@@ -1,0 +1,31 @@
+{
+  "type": "jsdrinks:tea_pile",
+  "ingredient": {
+    "item": "jsdrinks:bruised_tea_leaf"
+  },
+  "requires_large_leaf": false,
+  "duration": 1,
+  "time_unit": "days",
+  "surface": "any",
+  "outputs": [
+    {
+      "result": {
+        "stack": {
+          "id": "jsdrinks:fermented_tea_leaf",
+          "count": 1
+        },
+        "modifiers": [
+          {
+            "type": "jsdrinks:copy_components"
+          },
+          {
+            "type": "tfc:copy_food"
+          }
+        ]
+      },
+      "chance": 1.0,
+      "rotten": false,
+      "stage": 1
+    }
+  ]
+}

@@ -1,22 +1,22 @@
 package com.journey.jsdrinks.block.entity;
 
 import com.journey.jsdrinks.block.TeaPileBlock;
+import com.journey.jsdrinks.recipe.JSDRecipeTypes;
+import com.journey.jsdrinks.recipe.TeaPileInput;
+import com.journey.jsdrinks.recipe.TeaPileRecipe;
 import com.journey.jsdrinks.registry.JSDBlockEntities;
-import com.journey.jsdrinks.registry.JSDDataComponents;
 import com.journey.jsdrinks.registry.JSDItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.dries007.tfc.common.TFCTags;
 import net.dries007.tfc.common.blockentities.TFCBlockEntity;
 import net.dries007.tfc.common.component.food.FoodCapability;
 import net.dries007.tfc.util.calendar.Calendars;
-import net.dries007.tfc.util.calendar.ICalendar;
 
 public class TeaPileBlockEntity extends TFCBlockEntity {
 
@@ -57,74 +57,38 @@ public class TeaPileBlockEntity extends TFCBlockEntity {
         pile.lastTick = now;
         pile.agingTicks += delta;
 
-        // Stage 0 -> Stage 1: 1 TFC Day (Bruised -> Fermented)
-        if (currentStage == 0) {
-            if (pile.agingTicks >= ICalendar.CALENDAR_TICKS_IN_DAY) {
-                state = state.setValue(TeaPileBlock.STAGE, 1);
-                level.setBlockAndUpdate(pos, state);
+        BlockState belowState = level.getBlockState(pos.below());
+        TeaPileInput input = new TeaPileInput(pile.storedItem, belowState);
+        RecipeHolder<TeaPileRecipe> recipeHolder = level.getRecipeManager()
+            .getRecipeFor(JSDRecipeTypes.TEA_PILE.get(), input, level)
+            .orElse(null);
 
-                ItemStack fermented = new ItemStack(JSDItems.FERMENTED_TEA_LEAF.get());
-                // Preserve large leaf tag if it had one
-                if (Boolean.TRUE.equals(pile.storedItem.get(JSDDataComponents.LARGE_LEAF.get()))) {
-                    fermented.set(JSDDataComponents.LARGE_LEAF.get(), true);
+        if (recipeHolder != null) {
+            TeaPileRecipe recipe = recipeHolder.value();
+            if (pile.agingTicks >= recipe.getDurationTicks(level)) {
+                TeaPileRecipe.ChanceOutput outcome = recipe.rollOutcome(level.random);
+                if (outcome != null) {
+                    ItemStack result = outcome.result().getSingleStack(pile.storedItem);
+                    if (outcome.rotten()) {
+                        FoodCapability.setRotten(result);
+                    }
+                    pile.storedItem = result;
+                    state = state.setValue(TeaPileBlock.STAGE, outcome.targetStage());
+                    pile.agingTicks = 0;
+                    level.setBlockAndUpdate(pos, state);
+                    pile.setChanged();
                 }
-                pile.storedItem = fermented;
-                pile.agingTicks = 0;
-                pile.setChanged();
             }
-        }
-        // Stage 1 -> Stage 2 (Pu-erh) or Stage 3 (Rotten): 2 TFC Months
-        else if (currentStage == 1) {
+        } else if (currentStage == 1) {
+            // Fallback: If in stage 1 (fermented leaf) without large leaf (or invalid setup),
+            // it rots after 2 months (TZ 6.5)
             long twoMonthsTicks = 2L * Calendars.get(level).getCalendarTicksInMonth();
             if (pile.agingTicks >= twoMonthsTicks) {
-                boolean hasLargeLeaf = Boolean.TRUE.equals(pile.storedItem.get(JSDDataComponents.LARGE_LEAF.get()));
-
-                if (!hasLargeLeaf) {
-                    // Without large leaf: rots (TZ 6.5)
-                    state = state.setValue(TeaPileBlock.STAGE, 3);
-                    ItemStack rotten = new ItemStack(JSDItems.FERMENTED_TEA_LEAF.get());
-                    FoodCapability.setRotten(rotten);
-                    pile.storedItem = rotten;
-                } else {
-                    BlockState belowState = level.getBlockState(pos.below());
-                    boolean onSoil = belowState.is(BlockTags.DIRT) || belowState.is(TFCTags.Blocks.DIRT) || belowState.is(TFCTags.Blocks.GRASS);
-
-                    if (onSoil) {
-                        // On soil: 50% pu-erh, 25% strong pu-erh, 25% spoilage
-                        float roll = level.random.nextFloat();
-                        if (roll < 0.50f) {
-                            ItemStack puerh = new ItemStack(JSDItems.PUERH_TEA.get());
-                            FoodCapability.setCreatedNow(puerh);
-                            pile.storedItem = puerh;
-                            state = state.setValue(TeaPileBlock.STAGE, 2);
-                        } else if (roll < 0.75f) {
-                            ItemStack strongPuerh = new ItemStack(JSDItems.STRONG_PUERH_TEA.get());
-                            FoodCapability.setCreatedNow(strongPuerh);
-                            pile.storedItem = strongPuerh;
-                            state = state.setValue(TeaPileBlock.STAGE, 2);
-                        } else {
-                            state = state.setValue(TeaPileBlock.STAGE, 3); // Spoilage
-                            ItemStack rotten = new ItemStack(JSDItems.FERMENTED_TEA_LEAF.get());
-                            FoodCapability.setRotten(rotten);
-                            pile.storedItem = rotten;
-                        }
-                    } else {
-                        // Not on soil: 90% pu-erh, 10% spoilage
-                        float roll = level.random.nextFloat();
-                        if (roll < 0.90f) {
-                            ItemStack puerh = new ItemStack(JSDItems.PUERH_TEA.get());
-                            FoodCapability.setCreatedNow(puerh);
-                            pile.storedItem = puerh;
-                            state = state.setValue(TeaPileBlock.STAGE, 2);
-                        } else {
-                            state = state.setValue(TeaPileBlock.STAGE, 3); // Spoilage
-                            ItemStack rotten = new ItemStack(JSDItems.FERMENTED_TEA_LEAF.get());
-                            FoodCapability.setRotten(rotten);
-                            pile.storedItem = rotten;
-                        }
-                    }
-                }
-
+                state = state.setValue(TeaPileBlock.STAGE, 3);
+                ItemStack rotten = new ItemStack(JSDItems.FERMENTED_TEA_LEAF.get());
+                FoodCapability.setRotten(rotten);
+                pile.storedItem = rotten;
+                pile.agingTicks = 0;
                 level.setBlockAndUpdate(pos, state);
                 pile.setChanged();
             }

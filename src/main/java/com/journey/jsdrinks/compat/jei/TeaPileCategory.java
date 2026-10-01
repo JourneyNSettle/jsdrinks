@@ -1,7 +1,10 @@
 package com.journey.jsdrinks.compat.jei;
 
+import java.util.Arrays;
 import java.util.List;
 import com.journey.jsdrinks.JourneyDrinks;
+import com.journey.jsdrinks.recipe.TeaPileRecipe;
+import com.journey.jsdrinks.registry.JSDDataComponents;
 import com.journey.jsdrinks.registry.JSDItems;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -15,16 +18,21 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.AbstractRecipeCategory;
+import net.dries007.tfc.common.component.food.FoodCapability;
 import net.dries007.tfc.compat.jei.category.BaseRecipeCategory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
-public class TeaPileCategory extends AbstractRecipeCategory<TeaPileRecipe> {
-    public static final RecipeType<TeaPileRecipe> TYPE = RecipeType.create(JourneyDrinks.MODID, "tea_pile", TeaPileRecipe.class);
+public class TeaPileCategory extends AbstractRecipeCategory<RecipeHolder<TeaPileRecipe>> {
+    public static final RecipeType<RecipeHolder<TeaPileRecipe>> TYPE = RecipeType.createRecipeHolderType(
+        ResourceLocation.fromNamespaceAndPath(JourneyDrinks.MODID, "tea_pile")
+    );
 
     private static final int WIDTH = 156;
     private static final int HEIGHT = 56;
@@ -55,9 +63,20 @@ public class TeaPileCategory extends AbstractRecipeCategory<TeaPileRecipe> {
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, TeaPileRecipe recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<TeaPileRecipe> recipeHolder, IFocusGroup focuses) {
+        TeaPileRecipe recipe = recipeHolder.value();
+
+        List<ItemStack> inputStacks = Arrays.stream(recipe.getIngredient().getItems())
+            .map(ItemStack::copy)
+            .peek(stack -> {
+                if (recipe.requiresLargeLeaf()) {
+                    stack.set(JSDDataComponents.LARGE_LEAF.get(), true);
+                }
+            })
+            .toList();
+
         IRecipeSlotBuilder inputSlot = builder.addSlot(RecipeIngredientRole.INPUT, 7, 7)
-            .addItemStack(recipe.input())
+            .addItemStacks(inputStacks)
             .setStandardSlotBackground();
 
         if (recipe.requiresLargeLeaf()) {
@@ -67,21 +86,25 @@ public class TeaPileCategory extends AbstractRecipeCategory<TeaPileRecipe> {
         }
 
         builder.addSlot(RecipeIngredientRole.CATALYST, 7, 31)
-            .addItemStacks(recipe.surfaceBlocks())
+            .addItemStacks(recipe.getDisplaySurfaceBlocks())
             .setStandardSlotBackground()
             .addRichTooltipCallback((slotView, tooltip) -> {
-                tooltip.add(recipe.surfaceDescription());
+                tooltip.add(recipe.getSurfaceDescription());
             });
 
-        int[] xPositions = getOutputXPositions(recipe.outputs().size());
-        for (int i = 0; i < recipe.outputs().size(); i++) {
-            TeaPileRecipe.ChanceOutput out = recipe.outputs().get(i);
+        int[] xPositions = getOutputXPositions(recipe.getOutputs().size());
+        for (int i = 0; i < recipe.getOutputs().size(); i++) {
+            TeaPileRecipe.ChanceOutput out = recipe.getOutputs().get(i);
+            ItemStack displayStack = out.result().getEmptyStack().copy();
+            if (out.rotten()) {
+                FoodCapability.setRotten(displayStack);
+            }
             builder.addSlot(RecipeIngredientRole.OUTPUT, xPositions[i], 19)
-                .addItemStack(out.stack())
+                .addItemStack(displayStack)
                 .setStandardSlotBackground()
                 .addRichTooltipCallback((slotView, tooltip) -> {
                     int pct = (int) (out.chance() * 100);
-                    if (out.isSpoilage()) {
+                    if (out.rotten()) {
                         tooltip.add(Component.translatable("jsdrinks.jei.tea_pile.chance_spoilage", pct).withStyle(ChatFormatting.RED));
                     } else {
                         tooltip.add(Component.translatable("jsdrinks.jei.tea_pile.chance", pct).withStyle(ChatFormatting.GREEN));
@@ -91,12 +114,13 @@ public class TeaPileCategory extends AbstractRecipeCategory<TeaPileRecipe> {
     }
 
     @Override
-    public void draw(TeaPileRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<TeaPileRecipe> recipeHolder, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+        TeaPileRecipe recipe = recipeHolder.value();
         Font font = Minecraft.getInstance().font;
 
         // Draw duration text above arrow
-        int timeWidth = font.width(recipe.durationText());
-        guiGraphics.drawString(font, recipe.durationText(), 51 - timeWidth / 2, 7, 0xFF404040, false);
+        int timeWidth = font.width(recipe.getDurationText());
+        guiGraphics.drawString(font, recipe.getDurationText(), 51 - timeWidth / 2, 7, 0xFF404040, false);
 
         // Draw arrow
         arrow.draw(guiGraphics, 40, 20);
@@ -108,18 +132,18 @@ public class TeaPileCategory extends AbstractRecipeCategory<TeaPileRecipe> {
         guiGraphics.drawString(font, weather, 51 - weatherWidth / 2, 40, 0xFF666666, false);
 
         // Draw percentage under each output slot
-        int[] xPositions = getOutputXPositions(recipe.outputs().size());
-        for (int i = 0; i < recipe.outputs().size(); i++) {
-            TeaPileRecipe.ChanceOutput out = recipe.outputs().get(i);
+        int[] xPositions = getOutputXPositions(recipe.getOutputs().size());
+        for (int i = 0; i < recipe.getOutputs().size(); i++) {
+            TeaPileRecipe.ChanceOutput out = recipe.getOutputs().get(i);
             String percent = (int) (out.chance() * 100) + "%";
             int pWidth = font.width(percent);
-            int pColor = out.isSpoilage() ? 0xFFA04040 : (recipe.outputs().size() > 1 && i == 0 && recipe.outputs().size() == 3 ? 0xFF206020 : 0xFF404040);
+            int pColor = out.rotten() ? 0xFFA04040 : (recipe.getOutputs().size() > 1 && i == 0 && recipe.getOutputs().size() == 3 ? 0xFF206020 : 0xFF404040);
             guiGraphics.drawString(font, percent, xPositions[i] + 9 - pWidth / 2, 41, pColor, false);
         }
     }
 
     @Override
-    public void getTooltip(ITooltipBuilder tooltip, TeaPileRecipe recipe, IRecipeSlotsView recipeSlots, double mouseX, double mouseY) {
+    public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<TeaPileRecipe> recipeHolder, IRecipeSlotsView recipeSlots, double mouseX, double mouseY) {
         // Precise hitbox around the arrow and weather icon
         if (mouseX >= 38 && mouseX <= 64 && mouseY >= 18 && mouseY <= 38) {
             tooltip.add(Component.translatable("jsdrinks.jei.tea_pile.weather_info").withStyle(ChatFormatting.YELLOW));

@@ -2,6 +2,7 @@ package com.journey.jsdrinks.compat.jei;
 
 import java.util.List;
 import com.journey.jsdrinks.JourneyDrinks;
+import com.journey.jsdrinks.recipe.JSDRecipeTypes;
 import com.journey.jsdrinks.registry.JSDItems;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -11,6 +12,7 @@ import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
+import net.dries007.tfc.client.ClientHelpers;
 import net.dries007.tfc.common.recipes.HeatingRecipe;
 import net.dries007.tfc.compat.jei.JEIIntegration;
 import net.minecraft.network.chat.Component;
@@ -40,7 +42,10 @@ public class JSDJEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        registration.addRecipes(TeaPileCategory.TYPE, TeaPileRecipe.getRecipes());
+        registration.addRecipes(
+            TeaPileCategory.TYPE,
+            ClientHelpers.getLevelOrThrow().getRecipeManager().getAllRecipesFor(JSDRecipeTypes.TEA_PILE.get())
+        );
 
         registration.addItemStackInfo(
             List.of(

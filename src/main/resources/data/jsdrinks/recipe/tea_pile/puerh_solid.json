@@ -1,0 +1,39 @@
+{
+  "type": "jsdrinks:tea_pile",
+  "ingredient": {
+    "item": "jsdrinks:fermented_tea_leaf"
+  },
+  "requires_large_leaf": true,
+  "duration": 2,
+  "time_unit": "months",
+  "surface": "solid",
+  "outputs": [
+    {
+      "result": {
+        "stack": {
+          "id": "jsdrinks:puerh_tea",
+          "count": 1
+        },
+        "modifiers": [
+          {
+            "type": "tfc:reset_food"
+          }
+        ]
+      },
+      "chance": 0.9,
+      "rotten": false,
+      "stage": 2
+    },
+    {
+      "result": {
+        "stack": {
+          "id": "jsdrinks:fermented_tea_leaf",
+          "count": 1
+        }
+      },
+      "chance": 0.1,
+      "rotten": true,
+      "stage": 3
+    }
+  ]
+}

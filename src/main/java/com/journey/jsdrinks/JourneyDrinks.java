@@ -2,6 +2,8 @@ package com.journey.jsdrinks;
 
 import com.journey.jsdrinks.client.JSDClientEvents;
 import com.journey.jsdrinks.recipe.JSDItemStackModifiers;
+import com.journey.jsdrinks.recipe.JSDRecipeSerializers;
+import com.journey.jsdrinks.recipe.JSDRecipeTypes;
 import com.journey.jsdrinks.registry.*;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -29,6 +31,8 @@ public class JourneyDrinks {
         JSDFluids.FLUIDS.register(modEventBus);
         JSDFluids.FLUID_TYPES.register(modEventBus);
         JSDItemStackModifiers.MODIFIERS.register(modEventBus);
+        JSDRecipeTypes.RECIPE_TYPES.register(modEventBus);
+        JSDRecipeSerializers.RECIPE_SERIALIZERS.register(modEventBus);
         JSDCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         JSDFeatures.FEATURES.register(modEventBus);
 
