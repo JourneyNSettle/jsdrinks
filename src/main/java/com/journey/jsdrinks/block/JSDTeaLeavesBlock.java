@@ -176,13 +176,16 @@ public class JSDTeaLeavesBlock extends FruitTreeLeavesBlock {
             if (!level.isClientSide()) {
                 boolean isKnife = stack.is(TFCTags.Items.TOOLS_KNIFE) || stack.is(TeaBushBlock.KNIVES_C_TAG);
                 if (isKnife) {
-                    // Нож: больше листа (2-3 шт.), расход 1 прочности, без тегов
+                    // Сбор ножом с дерева: 50% 2 листа, 50% 3 листа (все без тегов), расход 1 прочности
                     stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
-                    ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(JSDItems.FRESH_TEA_LEAF.get(), 2 + level.random.nextInt(2)));
+                    int count = level.random.nextBoolean() ? 2 : 3;
+                    ItemHandlerHelper.giveItemToPlayer(player, new ItemStack(JSDItems.FRESH_TEA_LEAF.get(), count));
                 } else {
-                    // Рука: меньше листа (1-2 шт.), тег LARGE_LEAF для пуэра (ТЗ §4)
-                    ItemStack drop = new ItemStack(JSDItems.FRESH_TEA_LEAF.get(), 1 + (level.random.nextFloat() < 0.35f ? 1 : 0));
-                    drop.set(JSDDataComponents.LARGE_LEAF.get(), true);
+                    // Сбор рукой с дерева: 1 лист (75% без тега, 25% крупный лист для пуэра)
+                    ItemStack drop = new ItemStack(JSDItems.FRESH_TEA_LEAF.get(), 1);
+                    if (level.random.nextFloat() < 0.25f) {
+                        drop.set(JSDDataComponents.LARGE_LEAF.get(), true);
+                    }
                     ItemHandlerHelper.giveItemToPlayer(player, drop);
                 }
             }

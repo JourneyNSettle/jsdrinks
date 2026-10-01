@@ -404,23 +404,18 @@ public class TeaBushBlock extends SeasonalPlantBlock implements HoeOverlayBlock 
             boolean isKnife = stack.is(TFCTags.Items.TOOLS_KNIFE) || stack.is(KNIVES_C_TAG);
 
             if (isKnife) {
-                // Knife path: more leaves, no tags, costs durability.
+                // Нож с куста: 25% 1 лист, 75% 2 листа (все без тегов), расход 1 прочности
                 stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
+                int count = level.random.nextFloat() < 0.25f ? 1 : 2;
                 ItemHandlerHelper.giveItemToPlayer(player,
-                    new ItemStack(JSDItems.FRESH_TEA_LEAF.get(), 2 + level.random.nextInt(2)));
+                    new ItemStack(JSDItems.FRESH_TEA_LEAF.get(), count));
             } else {
-                // Bare-hand path: fewer leaves, chance of 'large' or 'select' tag.
-                int count = 1 + (level.random.nextFloat() < 0.35f ? 1 : 0);
-                for (int i = 0; i < count; i++) {
-                    ItemStack drop = new ItemStack(JSDItems.FRESH_TEA_LEAF.get(), 1);
-                    float roll = level.random.nextFloat();
-                    if (roll < 0.25f) {
-                        drop.set(JSDDataComponents.LARGE_LEAF.get(), true);
-                    } else if (roll < 0.50f) {
-                        drop.set(JSDDataComponents.SELECT.get(), true);
-                    }
-                    ItemHandlerHelper.giveItemToPlayer(player, drop);
+                // Рука с куста: 1 лист (75% без тега, 25% отборный)
+                ItemStack drop = new ItemStack(JSDItems.FRESH_TEA_LEAF.get(), 1);
+                if (level.random.nextFloat() < 0.25f) {
+                    drop.set(JSDDataComponents.SELECT.get(), true);
                 }
+                ItemHandlerHelper.giveItemToPlayer(player, drop);
             }
 
             // Reset harvest tracking and fruit picked timer on the authoritative LOWER block entity.

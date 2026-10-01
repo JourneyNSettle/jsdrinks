@@ -77,5 +77,5 @@
   "jsdrinks.jei.tea_pile.weather_rain_stop": "Во время дождя таймер приостанавливается",
   "jsdrinks.jei.tea_pile.chance": "Шанс: %s%%",
   "jsdrinks.jei.tea_pile.chance_spoilage": "Шанс: %s%% (Порча)",
-  "jsdrinks.jei.tea_pile.requires_large_leaf": "Требуется крупный лист (сбор рукой с куста или дерева)"
+  "jsdrinks.jei.tea_pile.requires_large_leaf": "Требуется крупный лист (сбор рукой с дерева)"
 }

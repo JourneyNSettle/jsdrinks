@@ -78,5 +78,5 @@
   "jsdrinks.jei.tea_pile.weather_rain_stop": "Timer pauses during rain",
   "jsdrinks.jei.tea_pile.chance": "Chance: %s%%",
   "jsdrinks.jei.tea_pile.chance_spoilage": "Chance: %s%% (Spoilage)",
-  "jsdrinks.jei.tea_pile.requires_large_leaf": "Requires large leaf (hand-harvested from bush or tree)"
+  "jsdrinks.jei.tea_pile.requires_large_leaf": "Requires large leaf (hand-harvested from tree)"
 }
