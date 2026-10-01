@@ -3,8 +3,8 @@ loaderVersion="${loader_version_range}"
 license="${mod_license}"
 
 [[mods]]
-authors = "ganjamonsta, Daymix, 413xgreenwich"
-credits = "Developement: ganjamonsta; Textures: Daymix; Idea: 413xgreenwich"
+authors = "ganjamonsta, Daymix, 413XGreenwich"
+credits = "Development: ganjamonsta; Textures: Daymix; Idea: 413XGreenwich"
 modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
