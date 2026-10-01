@@ -44,7 +44,7 @@ public class TeaPileCategory extends AbstractRecipeCategory<RecipeHolder<TeaPile
         super(
             TYPE,
             Component.translatable("jsdrinks.jei.tea_pile"),
-            helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(JSDItems.BRUISED_TEA_LEAF.get())),
+            helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, FoodCapability.setNonDecaying(new ItemStack(JSDItems.BRUISED_TEA_LEAF.get()))),
             WIDTH,
             HEIGHT
         );
@@ -66,21 +66,28 @@ public class TeaPileCategory extends AbstractRecipeCategory<RecipeHolder<TeaPile
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<TeaPileRecipe> recipeHolder, IFocusGroup focuses) {
         TeaPileRecipe recipe = recipeHolder.value();
 
-        List<ItemStack> inputStacks = Arrays.stream(recipe.getIngredient().getItems())
+        List<ItemStack> baseStacks = Arrays.stream(recipe.getIngredient().getItems())
             .map(ItemStack::copy)
-            .peek(stack -> {
-                if (recipe.requiresLargeLeaf()) {
-                    stack.set(JSDDataComponents.LARGE_LEAF.get(), true);
-                }
-            })
+            .map(FoodCapability::setTransientNonDecaying)
             .toList();
 
+        List<ItemStack> displayStacks = new java.util.ArrayList<>();
+        if (recipe.requiresLargeLeaf()) {
+            for (ItemStack base : baseStacks) {
+                ItemStack withLarge = base.copy();
+                withLarge.set(JSDDataComponents.LARGE_LEAF.get(), true);
+                displayStacks.add(withLarge);
+            }
+        }
+        displayStacks.addAll(baseStacks);
+
         IRecipeSlotBuilder inputSlot = builder.addSlot(RecipeIngredientRole.INPUT, 7, 7)
-            .addItemStacks(inputStacks)
+            .addItemStacks(displayStacks)
             .setStandardSlotBackground();
 
         if (recipe.requiresLargeLeaf()) {
             inputSlot.addRichTooltipCallback((slotView, tooltip) -> {
+                tooltip.add(Component.translatable("tooltip.jsdrinks.large_leaf").withStyle(ChatFormatting.DARK_GREEN));
                 tooltip.add(Component.translatable("jsdrinks.jei.tea_pile.requires_large_leaf").withStyle(ChatFormatting.GOLD));
             });
         }
@@ -98,6 +105,8 @@ public class TeaPileCategory extends AbstractRecipeCategory<RecipeHolder<TeaPile
             ItemStack displayStack = out.result().getEmptyStack().copy();
             if (out.rotten()) {
                 FoodCapability.setRotten(displayStack);
+            } else {
+                FoodCapability.setTransientNonDecaying(displayStack);
             }
             builder.addSlot(RecipeIngredientRole.OUTPUT, xPositions[i], 19)
                 .addItemStack(displayStack)

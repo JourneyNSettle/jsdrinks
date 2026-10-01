@@ -26,10 +26,8 @@
     },
     {
       "result": {
-        "stack": {
-          "id": "jsdrinks:fermented_tea_leaf",
-          "count": 1
-        }
+        "id": "jsdrinks:fermented_tea_leaf",
+        "count": 1
       },
       "chance": 0.1,
       "rotten": true,
