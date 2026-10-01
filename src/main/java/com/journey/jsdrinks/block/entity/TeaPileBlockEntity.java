@@ -90,17 +90,17 @@ public class TeaPileBlockEntity extends TFCBlockEntity {
                     boolean onSoil = belowState.is(BlockTags.DIRT) || belowState.is(TFCTags.Blocks.DIRT) || belowState.is(TFCTags.Blocks.GRASS);
 
                     if (onSoil) {
-                        // On soil: higher chance of strong pu-erh AND rot (TZ 6.5)
+                        // On soil: 50% pu-erh, 25% strong pu-erh, 25% spoilage
                         float roll = level.random.nextFloat();
                         if (roll < 0.50f) {
-                            ItemStack puerh = new ItemStack(JSDItems.STRONG_PUERH_TEA.get());
+                            ItemStack puerh = new ItemStack(JSDItems.PUERH_TEA.get());
                             FoodCapability.setCreatedNow(puerh);
                             pile.storedItem = puerh;
                             state = state.setValue(TeaPileBlock.STAGE, 2);
                         } else if (roll < 0.75f) {
-                            ItemStack puerh = new ItemStack(JSDItems.PUERH_TEA.get());
-                            FoodCapability.setCreatedNow(puerh);
-                            pile.storedItem = puerh;
+                            ItemStack strongPuerh = new ItemStack(JSDItems.STRONG_PUERH_TEA.get());
+                            FoodCapability.setCreatedNow(strongPuerh);
+                            pile.storedItem = strongPuerh;
                             state = state.setValue(TeaPileBlock.STAGE, 2);
                         } else {
                             state = state.setValue(TeaPileBlock.STAGE, 3); // Spoilage
@@ -109,9 +109,9 @@ public class TeaPileBlockEntity extends TFCBlockEntity {
                             pile.storedItem = rotten;
                         }
                     } else {
-                        // Not on soil: pu-erh with lower spoilage chance, no strong pu-erh
+                        // Not on soil: 90% pu-erh, 10% spoilage
                         float roll = level.random.nextFloat();
-                        if (roll < 0.85f) {
+                        if (roll < 0.90f) {
                             ItemStack puerh = new ItemStack(JSDItems.PUERH_TEA.get());
                             FoodCapability.setCreatedNow(puerh);
                             pile.storedItem = puerh;

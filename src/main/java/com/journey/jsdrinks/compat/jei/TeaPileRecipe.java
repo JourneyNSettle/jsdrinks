@@ -68,8 +68,8 @@ public record TeaPileRecipe(
             Component.translatable("jsdrinks.jei.tea_pile.surface.solid"),
             Component.translatable("jsdrinks.jei.tea_pile.duration.2_months"),
             List.of(
-                new ChanceOutput(puerh, 0.85f, false),
-                new ChanceOutput(rotten, 0.15f, true)
+                new ChanceOutput(puerh, 0.90f, false),
+                new ChanceOutput(rotten, 0.10f, true)
             )
         );
 
@@ -91,8 +91,8 @@ public record TeaPileRecipe(
             Component.translatable("jsdrinks.jei.tea_pile.surface.soil"),
             Component.translatable("jsdrinks.jei.tea_pile.duration.2_months"),
             List.of(
-                new ChanceOutput(strongPuerh, 0.50f, false),
-                new ChanceOutput(puerh.copy(), 0.25f, false),
+                new ChanceOutput(puerh.copy(), 0.50f, false),
+                new ChanceOutput(strongPuerh, 0.25f, false),
                 new ChanceOutput(rotten.copy(), 0.25f, true)
             )
         );
