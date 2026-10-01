@@ -26,10 +26,9 @@ import net.minecraft.world.item.ItemStack;
 public class TeaPileCategory extends AbstractRecipeCategory<TeaPileRecipe> {
     public static final RecipeType<TeaPileRecipe> TYPE = RecipeType.create(JourneyDrinks.MODID, "tea_pile", TeaPileRecipe.class);
 
-    private static final int WIDTH = 144;
-    private static final int HEIGHT = 52;
+    private static final int WIDTH = 156;
+    private static final int HEIGHT = 56;
 
-    private final IDrawableStatic slot;
     private final IDrawableStatic arrow;
     private final IDrawableAnimated arrowAnimated;
 
@@ -41,7 +40,6 @@ public class TeaPileCategory extends AbstractRecipeCategory<TeaPileRecipe> {
             WIDTH,
             HEIGHT
         );
-        this.slot = helper.getSlotDrawable();
         this.arrow = helper.createDrawable(BaseRecipeCategory.ICONS, 0, 14, 22, 16);
         IDrawableStatic arrowAnim = helper.createDrawable(BaseRecipeCategory.ICONS, 22, 14, 22, 16);
         this.arrowAnimated = helper.createAnimatedDrawable(arrowAnim, 80, IDrawableAnimated.StartDirection.LEFT, false);
@@ -49,18 +47,18 @@ public class TeaPileCategory extends AbstractRecipeCategory<TeaPileRecipe> {
 
     private static int[] getOutputXPositions(int count) {
         return switch (count) {
-            case 1 -> new int[]{92};
-            case 2 -> new int[]{78, 106};
-            case 3 -> new int[]{68, 92, 116};
-            default -> new int[]{92};
+            case 1 -> new int[]{104};
+            case 2 -> new int[]{92, 120};
+            case 3 -> new int[]{80, 104, 128};
+            default -> new int[]{104};
         };
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, TeaPileRecipe recipe, IFocusGroup focuses) {
-        IRecipeSlotBuilder inputSlot = builder.addSlot(RecipeIngredientRole.INPUT, 6, 6)
+        IRecipeSlotBuilder inputSlot = builder.addSlot(RecipeIngredientRole.INPUT, 7, 7)
             .addItemStack(recipe.input())
-            .setBackground(slot, -1, -1);
+            .setStandardSlotBackground();
 
         if (recipe.requiresLargeLeaf()) {
             inputSlot.addRichTooltipCallback((slotView, tooltip) -> {
@@ -68,9 +66,9 @@ public class TeaPileCategory extends AbstractRecipeCategory<TeaPileRecipe> {
             });
         }
 
-        builder.addSlot(RecipeIngredientRole.CATALYST, 6, 28)
+        builder.addSlot(RecipeIngredientRole.CATALYST, 7, 31)
             .addItemStacks(recipe.surfaceBlocks())
-            .setBackground(slot, -1, -1)
+            .setStandardSlotBackground()
             .addRichTooltipCallback((slotView, tooltip) -> {
                 tooltip.add(recipe.surfaceDescription());
             });
@@ -78,9 +76,9 @@ public class TeaPileCategory extends AbstractRecipeCategory<TeaPileRecipe> {
         int[] xPositions = getOutputXPositions(recipe.outputs().size());
         for (int i = 0; i < recipe.outputs().size(); i++) {
             TeaPileRecipe.ChanceOutput out = recipe.outputs().get(i);
-            builder.addSlot(RecipeIngredientRole.OUTPUT, xPositions[i], 17)
+            builder.addSlot(RecipeIngredientRole.OUTPUT, xPositions[i], 19)
                 .addItemStack(out.stack())
-                .setBackground(slot, -1, -1)
+                .setStandardSlotBackground()
                 .addRichTooltipCallback((slotView, tooltip) -> {
                     int pct = (int) (out.chance() * 100);
                     if (out.isSpoilage()) {
@@ -98,16 +96,16 @@ public class TeaPileCategory extends AbstractRecipeCategory<TeaPileRecipe> {
 
         // Draw duration text above arrow
         int timeWidth = font.width(recipe.durationText());
-        guiGraphics.drawString(font, recipe.durationText(), 47 - timeWidth / 2, 6, 0xFF404040, false);
+        guiGraphics.drawString(font, recipe.durationText(), 51 - timeWidth / 2, 7, 0xFF404040, false);
 
         // Draw arrow
-        arrow.draw(guiGraphics, 36, 18);
-        arrowAnimated.draw(guiGraphics, 36, 18);
+        arrow.draw(guiGraphics, 40, 20);
+        arrowAnimated.draw(guiGraphics, 40, 20);
 
         // Draw weather text below arrow
         Component weather = Component.translatable("jsdrinks.jei.tea_pile.weather");
         int weatherWidth = font.width(weather);
-        guiGraphics.drawString(font, weather, 47 - weatherWidth / 2, 38, 0xFF666666, false);
+        guiGraphics.drawString(font, weather, 51 - weatherWidth / 2, 40, 0xFF666666, false);
 
         // Draw percentage under each output slot
         int[] xPositions = getOutputXPositions(recipe.outputs().size());
@@ -116,13 +114,14 @@ public class TeaPileCategory extends AbstractRecipeCategory<TeaPileRecipe> {
             String percent = (int) (out.chance() * 100) + "%";
             int pWidth = font.width(percent);
             int pColor = out.isSpoilage() ? 0xFFA04040 : (recipe.outputs().size() > 1 && i == 0 && recipe.outputs().size() == 3 ? 0xFF206020 : 0xFF404040);
-            guiGraphics.drawString(font, percent, xPositions[i] + 9 - pWidth / 2, 38, pColor, false);
+            guiGraphics.drawString(font, percent, xPositions[i] + 9 - pWidth / 2, 41, pColor, false);
         }
     }
 
     @Override
     public void getTooltip(ITooltipBuilder tooltip, TeaPileRecipe recipe, IRecipeSlotsView recipeSlots, double mouseX, double mouseY) {
-        if (mouseX >= 34 && mouseX <= 60 && mouseY >= 16 && mouseY <= 48) {
+        // Precise hitbox around the arrow and weather icon
+        if (mouseX >= 38 && mouseX <= 64 && mouseY >= 18 && mouseY <= 38) {
             tooltip.add(Component.translatable("jsdrinks.jei.tea_pile.weather_info").withStyle(ChatFormatting.YELLOW));
             tooltip.add(Component.translatable("jsdrinks.jei.tea_pile.weather_rain_stop").withStyle(ChatFormatting.GRAY));
         }
