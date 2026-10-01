@@ -12,8 +12,12 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 
 import net.dries007.tfc.client.extensions.FluidRendererExtension;
+import com.eerussianguy.firmalife.common.blockentities.FLBlockEntities;
+import com.journey.jsdrinks.client.render.JSDStompingBarrelRenderer;
 import net.dries007.tfc.common.fluids.FluidHolder;
 import net.dries007.tfc.common.fluids.TFCFluids;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
 public class JSDClientEvents {
 
@@ -24,7 +28,12 @@ public class JSDClientEvents {
 
     public static void init(IEventBus modBus) {
         modBus.addListener(JSDClientEvents::registerClientExtensions);
+        modBus.addListener(EventPriority.LOWEST, JSDClientEvents::registerRenderers);
         NeoForge.EVENT_BUS.addListener(JSDClientEvents::onItemTooltip);
+    }
+
+    public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(FLBlockEntities.STOMPING_BARREL.get(), ctx -> new JSDStompingBarrelRenderer());
     }
 
     public static void registerClientExtensions(RegisterClientExtensionsEvent event) {

@@ -409,13 +409,18 @@ public class TeaBushBlock extends SeasonalPlantBlock implements HoeOverlayBlock 
                 ItemHandlerHelper.giveItemToPlayer(player,
                     new ItemStack(JSDItems.FRESH_TEA_LEAF.get(), 2 + level.random.nextInt(2)));
             } else {
-                // Bare-hand path: fewer leaves, chance of 'select' tag.
-                ItemStack drop = new ItemStack(JSDItems.FRESH_TEA_LEAF.get(),
-                    1 + (level.random.nextFloat() < 0.35f ? 1 : 0));
-                if (level.random.nextFloat() < 0.35f) {
-                    drop.set(JSDDataComponents.SELECT.get(), true);
+                // Bare-hand path: fewer leaves, chance of 'large' or 'select' tag.
+                int count = 1 + (level.random.nextFloat() < 0.35f ? 1 : 0);
+                for (int i = 0; i < count; i++) {
+                    ItemStack drop = new ItemStack(JSDItems.FRESH_TEA_LEAF.get(), 1);
+                    float roll = level.random.nextFloat();
+                    if (roll < 0.25f) {
+                        drop.set(JSDDataComponents.LARGE_LEAF.get(), true);
+                    } else if (roll < 0.50f) {
+                        drop.set(JSDDataComponents.SELECT.get(), true);
+                    }
+                    ItemHandlerHelper.giveItemToPlayer(player, drop);
                 }
-                ItemHandlerHelper.giveItemToPlayer(player, drop);
             }
 
             // Reset harvest tracking and fruit picked timer on the authoritative LOWER block entity.
