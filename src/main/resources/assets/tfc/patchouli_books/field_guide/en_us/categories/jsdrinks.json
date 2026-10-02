@@ -1,6 +1,6 @@
 {
-  "name": "Journey Drinks",
+  "name": "TFC Advanced Drinks",
   "description": "Tea and coffee production",
-  "icon": "jsdrinks:green_tea_leaf",
+  "icon": "jsdrinks:textures/gui/book/icon.png",
   "sortnum": 20
 }

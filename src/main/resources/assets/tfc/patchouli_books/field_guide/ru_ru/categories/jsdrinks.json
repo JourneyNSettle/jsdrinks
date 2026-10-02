@@ -1,6 +1,6 @@
 {
-  "name": "Чай и кофе",
+  "name": "TFC Advanced Drinks",
   "description": "Производство чая и кофе",
-  "icon": "jsdrinks:green_tea_leaf",
+  "icon": "jsdrinks:textures/gui/book/icon.png",
   "sortnum": 20
 }

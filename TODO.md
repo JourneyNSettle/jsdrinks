@@ -9,10 +9,7 @@ Features:
 Fixes:
 
 - JEI recipes and info correction
-- patchouli correction
 - tea liquids color correction
-- coffee sapling texture fix
-- patchouli and JEI rotten textures fix
 - tea trees and bushes generation improvements
 
 

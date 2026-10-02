@@ -6,12 +6,12 @@
     {
       "type": "patchouli:text",
       "title": "Tea Plants",
-      "text": "$(bold)Where it grows:$() Warm and humid climates.$(br)$(bold)Temperature:$() 10°C to 26°C$(br)$(bold)Rainfall:$() 250 - 950 mm$(br2)$(bold)Seasonality:$() Flowers in April, bears leaves in May–June and August–September. Dormant in winter.$(br2)$(thing)Tea Bush & Tree:$() Planting a sapling in soil grows a 2-block-tall $(thing)Tea Bush$(). If left unharvested for 2 full years, it transforms into a $(thing)Tea Tree$(). In a greenhouse bonsai planter, it grows as a tree directly."
+      "text": "$(bold)Where it grows:$() Warm and humid climates.$(br)$(bold)Temperature:$() 10°C to 26°C$(br)$(bold)Rainfall:$() 250 - 950 mm$(br2)$(bold)Seasonality:$() Flowers in April, leaf-gathering seasons in May–June and August–September. Dormant in winter.$(br2)$(thing)Tea Bush & Tree:$() Planting a sapling in soil grows a 2-block-tall $(thing)Tea Bush$(). If left unharvested for 2 full years, it transforms into a $(thing)Tea Tree$(). In a greenhouse bonsai planter, it grows as a tree directly."
     },
     {
       "type": "patchouli:image",
       "images": [
-        "jsdrinks:textures/gui/book/tea_plants.png"
+        "jsdrinks:textures/gui/book/tea-tree.png"
       ],
       "text": "A mature Tea Tree (left) and two-block Tea Bush (right).",
       "border": true
@@ -24,9 +24,9 @@
     {
       "type": "patchouli:image",
       "images": [
-        "jsdrinks:textures/gui/book/coffee_tree.png"
+        "jsdrinks:textures/gui/book/coffee-tree.png"
       ],
-      "text": "A fruiting Coffee Tree with ripe cherries.",
+      "text": "Coffee Tree.",
       "border": true
     }
   ],
