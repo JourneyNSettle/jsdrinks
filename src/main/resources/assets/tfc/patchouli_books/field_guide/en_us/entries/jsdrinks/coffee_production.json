@@ -9,7 +9,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(thing)Production Chain$():$(br)$(li)Dry coffee cherries on a $(l:firmalife/drying)Drying Mat$()$(li)Craft dried cherries with a $(thing)Knife$() to extract raw beans$(li)Dry raw beans on a drying mat$(li)Heat dried beans carefully to roast them — listen for the crackle!$(li)Grind roasted beans in a $(l:crafting/quern)Quern$()"
+      "text": "$(thing)Production Chain$():$(br)$(li)Dry coffee cherries on a $(l:firmalife/drying)Drying Mat$()$(li)Remove the pulp from the coffee cherry with a $(thing)Knife$() to extract raw beans$(li)Dry raw beans on a drying mat$(li)Heat dried beans carefully to roast them — listen for the crackle!$(li)Grind roasted beans in a $(l:crafting/quern)Quern$()"
     },
     {
       "type": "patchouli:text",
@@ -17,7 +17,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(thing)Brewing$(): Place ground coffee in a $(thing)Pot$() with fresh water and heat.$(br)$(li)1 ground coffee + 500 mB water = Coffee$(li)2 ground coffee + 500 mB water = Strong Coffee$(br2)$(thing)Coffee with Milk$(): Mix coffee with milk (100 mB per 500 mB coffee) in a $(thing)Barrel$() or $(thing)Pot$()."
+      "text": "$(thing)Brewing$(): Place ground coffee in a $(thing)Pot$() with fresh water and heat.$(br)$(li)1 ground coffee + 500 mB water = Coffee$(li)2 ground coffee + 500 mB water = Strong Coffee$(br2)$(thing)Coffee with Milk$(): Mix coffee with milk (100 mB per 500 mB coffee) in a $(thing)Barrel$()."
     }
   ],
   "read_by_default": true,

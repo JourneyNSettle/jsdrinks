@@ -19,10 +19,11 @@
   },
   "specials": [],
   "textures": [
-    "tfc:block/wood/leaves/green_apple_fruiting",
-    "tfc:block/wood/leaves/green_apple_flowering",
-    "tfc:block/wood/leaves/green_apple",
-    "tfc:block/wood/leaves/green_apple"
+    "jsdrinks:block/fruit_tree/tea_fruiting_leaves",
+    "jsdrinks:block/fruit_tree/tea_dry_leaves",
+    "jsdrinks:block/fruit_tree/tea_flowering_leaves",
+    "jsdrinks:block/fruit_tree/tea_branch",
+    "jsdrinks:block/fruit_tree/tea_leaves"
   ],
   "tier": 15
 }
