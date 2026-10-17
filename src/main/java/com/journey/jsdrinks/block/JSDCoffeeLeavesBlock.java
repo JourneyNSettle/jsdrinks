@@ -4,7 +4,6 @@ import java.util.function.Supplier;
 
 import com.journey.jsdrinks.JSDConfig;
 import com.journey.jsdrinks.block.entity.JSDBerryBushBlockEntity;
-import com.journey.jsdrinks.registry.JSDDataComponents;
 import com.journey.jsdrinks.registry.JSDItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -160,9 +159,8 @@ public class JSDCoffeeLeavesBlock extends FruitTreeLeavesBlock {
     /**
      * TZ §3.5 harvest rules for coffee:
      * <ul>
-     *   <li><b>Knife:</b> 2–3 cherries, no {@code quality} tag, −1 durability.</li>
-     *   <li><b>Bare hand:</b> 1–2 cherries, always tagged with
-     *       {@code quality} 1–5.</li>
+     *   <li><b>Knife:</b> 2–3 cherries, −1 durability.</li>
+     *   <li><b>Bare hand:</b> 1–2 cherries.</li>
      * </ul>
      */
     @Override
@@ -177,16 +175,14 @@ public class JSDCoffeeLeavesBlock extends FruitTreeLeavesBlock {
                 boolean isKnife = stack.is(TFCTags.Items.TOOLS_KNIFE) || stack.is(TeaBushBlock.KNIVES_C_TAG);
 
                 if (isKnife) {
-                    // Knife: more cherries, no quality tag, costs durability.
+                    // Knife: more cherries, costs durability.
                     stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
                     ItemHandlerHelper.giveItemToPlayer(player,
                         new ItemStack(JSDItems.COFFEE_CHERRY.get(), 2 + level.random.nextInt(2)));
                 } else {
-                    // Bare hand: fewer cherries, always tagged with quality 1–5.
-                    ItemStack drop = new ItemStack(JSDItems.COFFEE_CHERRY.get(),
-                        1 + (level.random.nextFloat() < 0.35f ? 1 : 0));
-                    drop.set(JSDDataComponents.QUALITY.get(), 1 + level.random.nextInt(5));
-                    ItemHandlerHelper.giveItemToPlayer(player, drop);
+                    // Bare hand: fewer cherries.
+                    ItemHandlerHelper.giveItemToPlayer(player,
+                        new ItemStack(JSDItems.COFFEE_CHERRY.get(), 1 + (level.random.nextFloat() < 0.35f ? 1 : 0)));
                 }
             }
 
