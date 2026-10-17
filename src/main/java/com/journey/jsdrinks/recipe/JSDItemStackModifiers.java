@@ -49,9 +49,6 @@ public class JSDItemStackModifiers {
             if (input.has(JSDDataComponents.LARGE_LEAF.get())) {
                 stack.set(JSDDataComponents.LARGE_LEAF.get(), input.get(JSDDataComponents.LARGE_LEAF.get()));
             }
-            if (input.has(JSDDataComponents.QUALITY.get())) {
-                stack.set(JSDDataComponents.QUALITY.get(), input.get(JSDDataComponents.QUALITY.get()));
-            }
             return stack;
         }
 
@@ -71,9 +68,6 @@ public class JSDItemStackModifiers {
 
         @Override
         public ItemStack apply(ItemStack stack, ItemStack input, Context context) {
-            if (input.has(JSDDataComponents.QUALITY.get())) {
-                stack.set(JSDDataComponents.QUALITY.get(), input.get(JSDDataComponents.QUALITY.get()));
-            }
             if (input.has(JSDDataComponents.BURNT.get())) {
                 stack.set(JSDDataComponents.BURNT.get(), input.get(JSDDataComponents.BURNT.get()));
             }

@@ -23,9 +23,6 @@ public class JSDDataComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> BURNT =
             register("burnt", builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> QUALITY =
-            register("quality", builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
-
     private static <T> DeferredHolder<DataComponentType<?>, DataComponentType<T>> register(
             String name, UnaryOperator<DataComponentType.Builder<T>> builderOperator) {
         return DATA_COMPONENTS.register(name, () -> builderOperator.apply(new DataComponentType.Builder<T>()).build());

@@ -85,11 +85,5 @@ public class JSDClientEvents {
                 event.getToolTip().add(Component.translatable("tooltip.jsdrinks.burnt").withStyle(ChatFormatting.RED));
             }
         }
-        if (stack.has(JSDDataComponents.QUALITY.get())) {
-            Integer quality = stack.get(JSDDataComponents.QUALITY.get());
-            if (quality != null) {
-                event.getToolTip().add(Component.translatable("tooltip.jsdrinks.quality", quality).withStyle(ChatFormatting.YELLOW));
-            }
-        }
     }
 }
